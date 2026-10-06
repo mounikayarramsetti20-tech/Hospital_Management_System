@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>
+        Treatment Details | CarePoint
+    </title>
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='style.css') }}"
+    >
+
+    <style>
+
+        .page-wrapper {
+            width: 92%;
+            max-width: 1050px;
+            margin: 40px auto;
+        }
+
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 20px;
+            flex-wrap: wrap;
+            margin-bottom: 25px;
+        }
+
+        .page-header h1 {
+            margin: 0 0 8px;
+            color: #17211d;
+            font-size: 32px;
+        }
+
+        .page-header p {
+            margin: 0;
+            color: #66736d;
+            font-size: 15px;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 11px 18px;
+            border-radius: 10px;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 700;
+            transition: 0.2s ease;
+        }
+
+        .btn:hover {
+            transform: translateY(-1px);
+        }
+
+        .btn-back {
+            background: #eef3f0;
+            color: #34423b;
+        }
+
+        .btn-edit {
+            background: #0f766e;
+            color: white;
+        }
+
+        .btn-edit:hover {
+            background: #0b625b;
+        }
+
+        .details-card {
+            background: white;
+            border: 1px solid #e3ebe7;
+            border-radius: 18px;
+            overflow: hidden;
+            box-shadow: 0 8px 28px rgba(31, 53, 44, 0.07);
+        }
+
+        .card-header {
+            padding: 22px 25px;
+            background: #f3f8f5;
+            border-bottom: 1px solid #e2ebe6;
+        }
+
+        .card-header h2 {
+            margin: 0 0 5px;
+            color: #17211d;
+            font-size: 19px;
+        }
+
+        .card-header p {
+            margin: 0;
+            color: #78837e;
+            font-size: 13px;
+        }
+
+        .details-body {
+            padding: 25px;
+        }
+
+        .section {
+            margin-bottom: 30px;
+        }
+
+        .section:last-child {
+            margin-bottom: 0;
+        }
+
+        .section-title {
+            margin: 0 0 16px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #e6eeea;
+            color: #0f766e;
+            font-size: 16px;
+            font-weight: 750;
+        }
+
+        .details-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+        }
+
+        .detail-item {
+            background: #fafcfb;
+            border: 1px solid #e7eeea;
+            border-radius: 12px;
+            padding: 15px;
+        }
+
+        .detail-item.full {
+            grid-column: 1 / -1;
+        }
+
+        .detail-label {
+            display: block;
+            margin-bottom: 6px;
+            color: #7a8781;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .detail-value {
+            color: #26332d;
+            font-size: 15px;
+            font-weight: 600;
+            word-break: break-word;
+        }
+
+        .id-value {
+            color: #0f766e;
+            font-weight: 750;
+        }
+
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 7px 13px;
+            border-radius: 999px;
+            background: #e8f5f1;
+            color: #0f766e;
+            font-size: 12px;
+            font-weight: 750;
+        }
+
+        .notes-box {
+            background: #f7faf8;
+            border-left: 4px solid #0f766e;
+            border-radius: 10px;
+            padding: 15px;
+            color: #4d5b54;
+            line-height: 1.6;
+            font-size: 14px;
+            white-space: pre-wrap;
+        }
+
+        .empty-value {
+            color: #89938e;
+            font-weight: 400;
+            font-style: italic;
+        }
+
+        .bottom-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            margin-top: 25px;
+        }
+
+        .footer-note {
+            text-align: center;
+            color: #89938e;
+            font-size: 12px;
+            padding: 25px 0 10px;
+        }
+
+        @media (max-width: 700px) {
+
+            .page-wrapper {
+                width: 94%;
+                margin: 25px auto;
+            }
+
+            .page-header h1 {
+                font-size: 27px;
+            }
+
+            .details-body {
+                padding: 20px;
+            }
+
+            .details-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .detail-item.full {
+                grid-column: auto;
+            }
+
+            .header-actions {
+                width: 100%;
+            }
+
+            .header-actions .btn {
+                flex: 1;
+            }
+
+            .bottom-actions {
+                flex-direction: column;
+            }
+
+            .bottom-actions .btn {
+                width: 100%;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+<div class="page-wrapper">
+
+
+    <!-- PAGE HEADER -->
+
+    <div class="page-header">
+
+        <div>
+
+            <h1>
+                Treatment Details
+            </h1>
+
+            <p>
+                Complete information about this treatment record.
+            </p>
+
+        </div>
+
+
+        <div class="header-actions">
+
+            <a
+                href="/treatments"
+                class="btn btn-back"
+            >
+                ← Treatments
+            </a>
+
+            <a
+                href="/treatments/{{ treatment.id }}/edit"
+                class="btn btn-edit"
+            >
+                Edit Treatment
+            </a>
+
+        </div>
+
+    </div>
+
+
+    <!-- DETAILS CARD -->
+
+    <div class="details-card">
+
+
+        <div class="card-header">
+
+            <h2>
+                Treatment Record #{{ treatment.id }}
+            </h2>
+
+            <p>
+                Patient treatment and medical information
+            </p>
+
+        </div>
+
+
+        <div class="details-body">
+
+
+            <!-- APPOINTMENT INFORMATION -->
+
+            <div class="section">
+
+                <h3 class="section-title">
+                    Appointment Information
+                </h3>
+
+
+                <div class="details-grid">
+
+
+                    <div class="detail-item">
+
+                        <span class="detail-label">
+                            Treatment ID
+                        </span>
+
+                        <div class="detail-value id-value">
+                            #{{ treatment.id }}
+                        </div>
+
+                    </div>
+
+
+                    <div class="detail-item">
+
+                        <span class="detail-label">
+                            Appointment ID
+                        </span>
+
+                        <div class="detail-value">
+                            #{{ treatment.appointment_id }}
+                        </div>
+
+                    </div>
+
+
+                </div>
+
+            </div>
+
+
+            <!-- PATIENT INFORMATION -->
+
+            <div class="section">
+
+                <h3 class="section-title">
+                    Patient Information
+                </h3>
+
+
+                <div class="details-grid">
+
+
+                    <div class="detail-item">
+
+                        <span class="detail-label">
+                            Patient Name
+                        </span>
+
+                        <div class="detail-value">
+                            {{ treatment.patient.name }}
+                        </div>
+
+                    </div>
+
+
+                    <div class="detail-item">
+
+                        <span class="detail-label">
+                            Patient Contact
+                        </span>
+
+                        <div class="detail-value">
+                            {{ treatment.patient.contact }}
+                        </div>
+
+                    </div>
+
+
+                </div>
+
+            </div>
+
+
+            <!-- DOCTOR INFORMATION -->
+
+            <div class="section">
+
+                <h3 class="section-title">
+                    Doctor Information
+                </h3>
+
+
+                <div class="details-grid">
+
+
+                    <div class="detail-item">
+
+                        <span class="detail-label">
+                            Doctor Name
+                        </span>
+
+                        <div class="detail-value">
+                            {{ treatment.doctor.name }}
+                        </div>
+
+                    </div>
+
+
+                    <div class="detail-item">
+
+                        <span class="detail-label">
+                            Specialization
+                        </span>
+
+                        <div class="detail-value">
+                            {{ treatment.doctor.specialization }}
+                        </div>
+
+                    </div>
+
+
+                </div>
+
+            </div>
+
+
+            <!-- TREATMENT INFORMATION -->
+
+            <div class="section">
+
+                <h3 class="section-title">
+                    Treatment Information
+                </h3>
+
+
+                <div class="details-grid">
+
+
+                    <div class="detail-item full">
+
+                        <span class="detail-label">
+                            Treatment
+                        </span>
+
+                        <div class="detail-value">
+                            {{ treatment.treatment }}
+                        </div>
+
+                    </div>
+
+
+                    <div class="detail-item">
+
+                        <span class="detail-label">
+                            Medicine
+                        </span>
+
+                        <div class="detail-value">
+
+                            {% if treatment.medicine %}
+
+                                {{ treatment.medicine }}
+
+                            {% else %}
+
+                                <span class="empty-value">
+                                    No medicine recorded
+                                </span>
+
+                            {% endif %}
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="detail-item">
+
+                        <span class="detail-label">
+                            Status
+                        </span>
+
+                        <div class="detail-value">
+
+                            <span class="status-badge">
+                                {{ treatment.status }}
+                            </span>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="detail-item full">
+
+                        <span class="detail-label">
+                            Notes
+                        </span>
+
+
+                        {% if treatment.notes %}
+
+                            <div class="notes-box">
+                                {{ treatment.notes }}
+                            </div>
+
+                        {% else %}
+
+                            <div class="notes-box empty-value">
+                                No notes available for this treatment.
+                            </div>
+
+                        {% endif %}
+
+                    </div>
+
+
+                </div>
+
+            </div>
+
+
+            <!-- BOTTOM ACTIONS -->
+
+            <div class="bottom-actions">
+
+                <a
+                    href="/treatments"
+                    class="btn btn-back"
+                >
+                    ← Back to Treatments
+                </a>
+
+
+                <a
+                    href="/treatments/{{ treatment.id }}/edit"
+                    class="btn btn-edit"
+                >
+                    Edit Treatment
+                </a>
+
+            </div>
+
+
+        </div>
+
+    </div>
+
+
+    <div class="footer-note">
+        CarePoint Hospital Management System • Treatment Management
+    </div>
+
+
+</div>
+
+</body>
+
+</html>

@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>
+        {% block title %}
+        Hospital Patient Record and Treatment Tracking System
+        {% endblock %}
+    </title>
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='style.css') }}"
+    >
+</head>
+
+<body>
+
+    <!-- Navigation -->
+    <nav class="navbar">
+
+        <div>
+            <a href="/">
+                <strong>Hospital Management System</strong>
+            </a>
+        </div>
+
+        <div>
+            <a href="/">Home</a>
+            <a href="/patients/">Patients</a>
+            <a href="/doctors/">Doctors</a>
+            <a href="/appointments/">Appointments</a>
+            <a href="/treatments/">Treatments</a>
+            <a href="/analytics">Analytics</a>
+            <a href="/data">Data Management</a>
+        </div>
+
+    </nav>
+
+
+    <!-- Main Content -->
+    <main class="container">
+
+        {% block content %}
+        {% endblock %}
+
+    </main>
+
+
+    <!-- Footer -->
+    <footer
+        style="
+            text-align: center;
+            padding: 25px;
+            margin-top: 40px;
+            color: #6b7280;
+        "
+    >
+        <p>
+            &copy; 2026 Hospital Patient Record and Treatment Tracking System
+        </p>
+
+        <p>
+            Flask &bull;
+            MySQL &bull;
+            JWT Authentication &bull;
+            Pandas &bull;
+            NumPy
+        </p>
+    </footer>
+
+
+    <!-- Common JavaScript -->
+    <script
+        src="{{ url_for('static', filename='script.js') }}"
+    ></script>
+
+    {% block scripts %}
+    {% endblock %}
+
+</body>
+</html>

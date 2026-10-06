@@ -1,0 +1,1016 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>CarePoint | Data Management</title>
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='style.css') }}"
+    >
+
+    <style>
+
+        /* =================================================
+           DATA MANAGEMENT PAGE
+           ================================================= */
+
+        .data-page {
+            padding: 42px 0 60px;
+        }
+
+        .data-hero {
+            background:
+                linear-gradient(
+                    135deg,
+                    #134e4a,
+                    #0d9488
+                );
+
+            color: white;
+
+            border-radius: 24px;
+
+            padding: 42px;
+
+            margin-bottom: 34px;
+
+            box-shadow:
+                0 18px 45px
+                rgba(15, 118, 110, 0.20);
+        }
+
+        .data-badge {
+            display: inline-block;
+
+            padding: 7px 13px;
+
+            margin-bottom: 16px;
+
+            border-radius: 999px;
+
+            background:
+                rgba(255,255,255,0.16);
+
+            font-size: 13px;
+
+            font-weight: 700;
+
+            letter-spacing: 0.4px;
+        }
+
+        .data-hero h1 {
+            margin: 0 0 10px;
+
+            font-size: 34px;
+        }
+
+        .data-hero p {
+            margin: 0;
+
+            color:
+                rgba(255,255,255,0.88);
+
+            font-size: 16px;
+
+            line-height: 1.6;
+        }
+
+        .data-grid {
+            display: grid;
+
+            grid-template-columns:
+                repeat(
+                    auto-fit,
+                    minmax(300px, 1fr)
+                );
+
+            gap: 22px;
+        }
+
+        .data-card {
+            background: white;
+
+            border:
+                1px solid #e5eeee;
+
+            border-radius: 20px;
+
+            padding: 28px;
+
+            box-shadow:
+                0 8px 25px
+                rgba(15, 23, 42, 0.06);
+        }
+
+        .data-card:hover {
+            box-shadow:
+                0 14px 32px
+                rgba(15, 23, 42, 0.09);
+        }
+
+        .card-icon {
+            width: 50px;
+
+            height: 50px;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            border-radius: 14px;
+
+            background: #ccfbf1;
+
+            color: #0f766e;
+
+            font-size: 22px;
+
+            font-weight: 800;
+
+            margin-bottom: 18px;
+        }
+
+        .data-card h2 {
+            margin: 0 0 10px;
+
+            color: #172b2b;
+
+            font-size: 21px;
+        }
+
+        .data-card p {
+            margin: 0 0 20px;
+
+            color: #64748b;
+
+            font-size: 14px;
+
+            line-height: 1.6;
+        }
+
+        .export-buttons {
+            display: flex;
+
+            flex-wrap: wrap;
+
+            gap: 10px;
+        }
+
+        .button {
+            display: inline-flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            padding: 12px 17px;
+
+            border: none;
+
+            border-radius: 10px;
+
+            background: #0f766e;
+
+            color: white;
+
+            text-decoration: none;
+
+            font-size: 14px;
+
+            font-weight: 700;
+
+            cursor: pointer;
+
+            transition:
+                background 0.2s ease,
+                transform 0.2s ease;
+        }
+
+        .button:hover {
+            background: #115e59;
+
+            transform: translateY(-1px);
+        }
+
+        .button.secondary {
+            background: white;
+
+            color: #0f766e;
+
+            border:
+                1px solid #99f6e4;
+        }
+
+        .button.secondary:hover {
+            background: #f0fdfa;
+        }
+
+        .file-area {
+            padding: 18px;
+
+            border:
+                2px dashed #99f6e4;
+
+            border-radius: 14px;
+
+            background: #f0fdfa;
+
+            margin-bottom: 16px;
+        }
+
+        .file-area label {
+            display: block;
+
+            color: #115e59;
+
+            font-size: 13px;
+
+            font-weight: 700;
+
+            margin-bottom: 10px;
+        }
+
+        input[type="file"] {
+            width: 100%;
+
+            padding: 10px;
+
+            border:
+                1px solid #cbd5e1;
+
+            border-radius: 9px;
+
+            background: white;
+
+            color: #475569;
+
+            font-size: 13px;
+        }
+
+        input[type="file"]:focus {
+            outline: none;
+
+            border-color: #0d9488;
+        }
+
+        .message {
+            display: none;
+
+            margin-top: 16px;
+
+            padding: 12px 14px;
+
+            border-radius: 10px;
+
+            font-size: 13px;
+
+            font-weight: 600;
+
+            line-height: 1.5;
+        }
+
+        .message.visible {
+            display: block;
+        }
+
+        .message.success {
+            background: #ecfdf5;
+
+            color: #047857;
+
+            border:
+                1px solid #a7f3d0;
+        }
+
+        .message.error {
+            background: #fff1f2;
+
+            color: #9f1239;
+
+            border:
+                1px solid #fecdd3;
+        }
+
+        .info-box {
+            margin-top: 24px;
+
+            padding: 18px;
+
+            background: #f8fafc;
+
+            border:
+                1px solid #e2e8f0;
+
+            border-radius: 14px;
+
+            color: #64748b;
+
+            font-size: 13px;
+
+            line-height: 1.6;
+        }
+
+        .info-box strong {
+            color: #334155;
+        }
+
+        .navigation {
+            display: flex;
+
+            flex-wrap: wrap;
+
+            justify-content: center;
+
+            gap: 10px;
+
+            margin-top: 38px;
+        }
+
+        .footer-note {
+            text-align: center;
+
+            margin-top: 24px;
+
+            color: #94a3b8;
+
+            font-size: 13px;
+        }
+
+        @media (max-width: 700px) {
+
+            .data-page {
+                padding-top: 25px;
+            }
+
+            .data-hero {
+                padding: 28px 22px;
+
+                border-radius: 18px;
+            }
+
+            .data-hero h1 {
+                font-size: 27px;
+            }
+
+            .data-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .navigation {
+                flex-direction: column;
+            }
+
+            .navigation .button {
+                width: 100%;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+    <!-- =================================================
+         NAVBAR
+         ================================================= -->
+
+    <nav class="navbar">
+
+        <div class="nav-container">
+
+            <a
+                href="/"
+                class="brand"
+            >
+
+                <span class="brand-mark">
+                    CP
+                </span>
+
+                <span>
+                    CarePoint
+                </span>
+
+            </a>
+
+
+            <div class="nav-links">
+
+                <a href="/">
+                    Home
+                </a>
+
+                <a href="/patients">
+                    Patients
+                </a>
+
+                <a href="/doctors">
+                    Doctors
+                </a>
+
+                <a href="/appointments">
+                    Appointments
+                </a>
+
+                <a href="/treatments">
+                    Treatments
+                </a>
+
+                <a href="/analytics">
+                    Analytics
+                </a>
+
+            </div>
+
+        </div>
+
+    </nav>
+
+
+    <!-- =================================================
+         MAIN
+         ================================================= -->
+
+    <main class="container data-page">
+
+
+        <!-- =================================================
+             HERO
+             ================================================= -->
+
+        <section class="data-hero">
+
+            <div class="data-badge">
+                CAREPOINT DATA MANAGEMENT
+            </div>
+
+            <h1>
+                Patient Data Import & Export
+            </h1>
+
+            <p>
+                Securely import patient records from CSV
+                or Excel files and export your hospital
+                data whenever needed.
+            </p>
+
+        </section>
+
+
+        <!-- =================================================
+             DATA CARDS
+             ================================================= -->
+
+        <div class="data-grid">
+
+
+            <!-- =================================================
+                 EXPORT
+                 ================================================= -->
+
+            <section class="data-card">
+
+                <div class="card-icon">
+                    ↓
+                </div>
+
+                <h2>
+                    Export Patient Data
+                </h2>
+
+                <p>
+                    Download all patient records in a
+                    convenient file format for reporting,
+                    backup, or further analysis.
+                </p>
+
+
+                <div class="export-buttons">
+
+                    <a
+                        href="/api/export/patients/csv"
+                        class="button"
+                    >
+                        Download CSV
+                    </a>
+
+                    <a
+                        href="/api/export/patients/excel"
+                        class="button secondary"
+                    >
+                        Download Excel
+                    </a>
+
+                </div>
+
+
+                <div class="info-box">
+
+                    <strong>Available formats:</strong>
+
+                    CSV for lightweight data exchange and
+                    Excel for spreadsheet-based analysis.
+
+                </div>
+
+            </section>
+
+
+            <!-- =================================================
+                 CSV IMPORT
+                 ================================================= -->
+
+            <section class="data-card">
+
+                <div class="card-icon">
+                    CSV
+                </div>
+
+                <h2>
+                    Import CSV
+                </h2>
+
+                <p>
+                    Select a CSV file containing patient
+                    data and import the records into the
+                    hospital database.
+                </p>
+
+
+                <div class="file-area">
+
+                    <label for="csvFile">
+                        Select CSV File
+                    </label>
+
+                    <input
+                        type="file"
+                        id="csvFile"
+                        accept=".csv"
+                    >
+
+                </div>
+
+
+                <button
+                    type="button"
+                    class="button"
+                    onclick="importCSV()"
+                >
+                    Import CSV
+                </button>
+
+
+                <div
+                    id="csvMessage"
+                    class="message"
+                ></div>
+
+            </section>
+
+
+            <!-- =================================================
+                 EXCEL IMPORT
+                 ================================================= -->
+
+            <section class="data-card">
+
+                <div class="card-icon">
+                    XLS
+                </div>
+
+                <h2>
+                    Import Excel
+                </h2>
+
+                <p>
+                    Select an Excel workbook containing
+                    patient data and import the records
+                    into the hospital database.
+                </p>
+
+
+                <div class="file-area">
+
+                    <label for="excelFile">
+                        Select Excel File
+                    </label>
+
+                    <input
+                        type="file"
+                        id="excelFile"
+                        accept=".xlsx,.xls"
+                    >
+
+                </div>
+
+
+                <button
+                    type="button"
+                    class="button"
+                    onclick="importExcel()"
+                >
+                    Import Excel
+                </button>
+
+
+                <div
+                    id="excelMessage"
+                    class="message"
+                ></div>
+
+            </section>
+
+
+        </div>
+
+
+        <!-- =================================================
+             NAVIGATION
+             ================================================= -->
+
+        <div class="navigation">
+
+            <a
+                href="/"
+                class="button secondary"
+            >
+                Back to Home
+            </a>
+
+            <a
+                href="/patients"
+                class="button"
+            >
+                View Patients
+            </a>
+
+            <a
+                href="/analytics"
+                class="button"
+            >
+                View Analytics
+            </a>
+
+        </div>
+
+
+        <div class="footer-note">
+
+            CarePoint Hospital Management System
+            &nbsp;•&nbsp;
+            Secure Data Management
+
+        </div>
+
+
+    </main>
+
+
+    <!-- =================================================
+         JAVASCRIPT
+         ================================================= -->
+
+    <script>
+
+
+        // =================================================
+        // MESSAGE HELPER
+        // =================================================
+
+        function showMessage(
+            element,
+            message,
+            type
+        ) {
+
+            element.innerText = message;
+
+            element.className =
+                "message visible " + type;
+
+        }
+
+
+        // =================================================
+        // IMPORT CSV
+        // =================================================
+
+        async function importCSV() {
+
+            const fileInput =
+                document.getElementById(
+                    "csvFile"
+                );
+
+            const message =
+                document.getElementById(
+                    "csvMessage"
+                );
+
+
+            if (!fileInput.files.length) {
+
+                showMessage(
+                    message,
+                    "Please select a CSV file.",
+                    "error"
+                );
+
+                return;
+            }
+
+
+            const token =
+                localStorage.getItem(
+                    "access_token"
+                );
+
+
+            if (!token) {
+
+                showMessage(
+                    message,
+                    "Login required. Please login first.",
+                    "error"
+                );
+
+                return;
+            }
+
+
+            const formData =
+                new FormData();
+
+
+            formData.append(
+                "file",
+                fileInput.files[0]
+            );
+
+
+            showMessage(
+                message,
+                "Importing CSV file...",
+                "success"
+            );
+
+
+            try {
+
+                const response =
+                    await fetch(
+                        "/api/import/patients/csv",
+                        {
+                            method: "POST",
+
+                            headers: {
+                                "Authorization":
+                                    "Bearer " + token
+                            },
+
+                            body: formData
+                        }
+                    );
+
+
+                const result =
+                    await response.json();
+
+
+                if (response.status === 401) {
+
+                    localStorage.removeItem(
+                        "access_token"
+                    );
+
+                    localStorage.removeItem(
+                        "user"
+                    );
+
+
+                    showMessage(
+                        message,
+                        "Session expired. Please login again.",
+                        "error"
+                    );
+
+                    return;
+                }
+
+
+                if (!response.ok) {
+
+                    showMessage(
+                        message,
+                        result.message ||
+                        "CSV import failed.",
+                        "error"
+                    );
+
+                    return;
+                }
+
+
+                showMessage(
+                    message,
+
+                    result.message +
+                    " | Imported: " +
+                    result.imported +
+                    " | Skipped: " +
+                    result.skipped,
+
+                    "success"
+                );
+
+
+                fileInput.value = "";
+
+            } catch (error) {
+
+                console.error(error);
+
+
+                showMessage(
+                    message,
+                    "Server error. Please try again.",
+                    "error"
+                );
+
+            }
+
+        }
+
+
+        // =================================================
+        // IMPORT EXCEL
+        // =================================================
+
+        async function importExcel() {
+
+            const fileInput =
+                document.getElementById(
+                    "excelFile"
+                );
+
+            const message =
+                document.getElementById(
+                    "excelMessage"
+                );
+
+
+            if (!fileInput.files.length) {
+
+                showMessage(
+                    message,
+                    "Please select an Excel file.",
+                    "error"
+                );
+
+                return;
+            }
+
+
+            const token =
+                localStorage.getItem(
+                    "access_token"
+                );
+
+
+            if (!token) {
+
+                showMessage(
+                    message,
+                    "Login required. Please login first.",
+                    "error"
+                );
+
+                return;
+            }
+
+
+            const formData =
+                new FormData();
+
+
+            formData.append(
+                "file",
+                fileInput.files[0]
+            );
+
+
+            showMessage(
+                message,
+                "Importing Excel file...",
+                "success"
+            );
+
+
+            try {
+
+                const response =
+                    await fetch(
+                        "/api/import/patients/excel",
+                        {
+                            method: "POST",
+
+                            headers: {
+                                "Authorization":
+                                    "Bearer " + token
+                            },
+
+                            body: formData
+                        }
+                    );
+
+
+                const result =
+                    await response.json();
+
+
+                if (response.status === 401) {
+
+                    localStorage.removeItem(
+                        "access_token"
+                    );
+
+                    localStorage.removeItem(
+                        "user"
+                    );
+
+
+                    showMessage(
+                        message,
+                        "Session expired. Please login again.",
+                        "error"
+                    );
+
+                    return;
+                }
+
+
+                if (!response.ok) {
+
+                    showMessage(
+                        message,
+                        result.message ||
+                        "Excel import failed.",
+                        "error"
+                    );
+
+                    return;
+                }
+
+
+                showMessage(
+                    message,
+
+                    result.message +
+                    " | Imported: " +
+                    result.imported +
+                    " | Skipped: " +
+                    result.skipped,
+
+                    "success"
+                );
+
+
+                fileInput.value = "";
+
+            } catch (error) {
+
+                console.error(error);
+
+
+                showMessage(
+                    message,
+                    "Server error. Please try again.",
+                    "error"
+                );
+
+            }
+
+        }
+
+    </script>
+
+
+</body>
+
+</html>

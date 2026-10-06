@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>CarePoint | Patient Details</title>
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='style.css') }}"
+    >
+
+    <style>
+
+        .page-container {
+            width: 92%;
+            max-width: 850px;
+            margin: 45px auto;
+        }
+
+        .page-heading {
+            text-align: center;
+            margin-bottom: 28px;
+        }
+
+        .page-heading small {
+            display: block;
+            color: #0f766e;
+            font-size: 11px;
+            font-weight: 800;
+            letter-spacing: 1.5px;
+            margin-bottom: 8px;
+        }
+
+        .page-heading h1 {
+            margin: 0;
+            color: #17201f;
+            font-size: 34px;
+            letter-spacing: -1px;
+        }
+
+        .page-heading p {
+            margin-top: 8px;
+            color: #6b7280;
+            font-size: 14px;
+        }
+
+        .details-card {
+            background: white;
+            border: 1px solid #e5e7eb;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 12px 35px rgba(0, 0, 0, 0.05);
+        }
+
+        .details-header {
+            padding: 26px 30px;
+            background: #f0faf8;
+            border-bottom: 1px solid #dcebe8;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .patient-icon {
+            width: 52px;
+            height: 52px;
+            border-radius: 15px;
+            background: #0f766e;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            font-weight: bold;
+        }
+
+        .details-header h2 {
+            margin: 0;
+            color: #17201f;
+            font-size: 19px;
+        }
+
+        .details-header span {
+            display: block;
+            margin-top: 4px;
+            color: #6b7280;
+            font-size: 11px;
+        }
+
+        .details-body {
+            padding: 8px 30px;
+        }
+
+        .detail-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+            padding: 20px 4px;
+            border-bottom: 1px solid #edf1f0;
+        }
+
+        .detail-row:last-child {
+            border-bottom: none;
+        }
+
+        .detail-label {
+            color: #6b7280;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.7px;
+        }
+
+        .detail-value {
+            color: #17201f;
+            font-size: 14px;
+            font-weight: 700;
+            text-align: right;
+        }
+
+        .id-badge {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 38px;
+            height: 29px;
+            padding: 0 9px;
+            border-radius: 8px;
+            background: #ecfdf5;
+            color: #0f766e;
+            font-size: 11px;
+            font-weight: 800;
+        }
+
+        .gender-badge {
+            display: inline-block;
+            padding: 6px 11px;
+            border-radius: 20px;
+            background: #f3f4f6;
+            color: #4b5563;
+            font-size: 11px;
+            font-weight: 700;
+        }
+
+        .contact-value {
+            color: #0f766e;
+        }
+
+        .details-footer {
+            padding: 22px 30px;
+            border-top: 1px solid #edf1f0;
+            display: flex;
+            gap: 12px;
+        }
+
+        .back-button,
+        .edit-button {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 12px 18px;
+            border-radius: 10px;
+            text-decoration: none;
+            font-size: 12px;
+            font-weight: 700;
+            transition: 0.2s ease;
+        }
+
+        .back-button {
+            border: 1px solid #d7dfdd;
+            color: #4b5563;
+            background: white;
+        }
+
+        .back-button:hover {
+            background: #f8faf9;
+        }
+
+        .edit-button {
+            background: #0f766e;
+            color: white;
+            box-shadow: 0 7px 18px rgba(15, 118, 110, 0.16);
+        }
+
+        .edit-button:hover {
+            background: #115e59;
+            transform: translateY(-1px);
+        }
+
+        .secure-note {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 7px;
+            margin-top: 20px;
+            color: #6b7280;
+            font-size: 10px;
+        }
+
+        .secure-note span {
+            color: #0f766e;
+            font-weight: bold;
+        }
+
+        @media (max-width: 700px) {
+
+            .page-container {
+                width: 90%;
+                margin: 30px auto;
+            }
+
+            .page-heading h1 {
+                font-size: 29px;
+            }
+
+            .details-header {
+                padding: 22px;
+            }
+
+            .details-body {
+                padding: 8px 22px;
+            }
+
+            .detail-row {
+                align-items: flex-start;
+                flex-direction: column;
+                gap: 7px;
+            }
+
+            .detail-value {
+                text-align: left;
+            }
+
+            .details-footer {
+                padding: 20px 22px;
+                flex-direction: column;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<!-- =====================================================
+     NAVIGATION
+     ===================================================== -->
+
+<nav class="navbar">
+
+    <div class="brand">
+
+        <div class="brand-icon">
+            ✚
+        </div>
+
+        <div>
+
+            <strong>
+                CarePoint
+            </strong>
+
+            <span>
+                Hospital Management
+            </span>
+
+        </div>
+
+    </div>
+
+
+    <div class="nav-links">
+
+        <a href="/">
+            Home
+        </a>
+
+        <a href="/patients" class="active">
+            Patients
+        </a>
+
+        <a href="/doctors">
+            Doctors
+        </a>
+
+        <a href="/appointments">
+            Appointments
+        </a>
+
+        <a href="/treatments">
+            Treatments
+        </a>
+
+        <a href="/analytics">
+            Analytics
+        </a>
+
+        <a href="/data">
+            Data
+        </a>
+
+    </div>
+
+
+    <div class="nav-user">
+
+        <a
+            href="/login"
+            class="btn btn-outline"
+        >
+            Login
+        </a>
+
+    </div>
+
+</nav>
+
+
+
+<!-- =====================================================
+     MAIN
+     ===================================================== -->
+
+<main class="page-container">
+
+
+    <div class="page-heading">
+
+        <small>
+            PATIENT MANAGEMENT
+        </small>
+
+        <h1>
+            Patient Details
+        </h1>
+
+        <p>
+            View the registered information for this patient.
+        </p>
+
+    </div>
+
+
+
+    <!-- =================================================
+         DETAILS CARD
+         ================================================= -->
+
+    <div class="details-card">
+
+
+        <div class="details-header">
+
+            <div class="patient-icon">
+                ♙
+            </div>
+
+            <div>
+
+                <h2>
+                    {{ patient.name }}
+                </h2>
+
+                <span>
+                    Registered Patient
+                </span>
+
+            </div>
+
+        </div>
+
+
+
+        <div class="details-body">
+
+
+            <!-- ID -->
+
+            <div class="detail-row">
+
+                <span class="detail-label">
+                    Patient ID
+                </span>
+
+                <span class="detail-value">
+
+                    <span class="id-badge">
+                        {{ patient.id }}
+                    </span>
+
+                </span>
+
+            </div>
+
+
+
+            <!-- NAME -->
+
+            <div class="detail-row">
+
+                <span class="detail-label">
+                    Patient Name
+                </span>
+
+                <span class="detail-value">
+                    {{ patient.name }}
+                </span>
+
+            </div>
+
+
+
+            <!-- AGE -->
+
+            <div class="detail-row">
+
+                <span class="detail-label">
+                    Age
+                </span>
+
+                <span class="detail-value">
+                    {{ patient.age }} years
+                </span>
+
+            </div>
+
+
+
+            <!-- GENDER -->
+
+            <div class="detail-row">
+
+                <span class="detail-label">
+                    Gender
+                </span>
+
+                <span class="detail-value">
+
+                    <span class="gender-badge">
+                        {{ patient.gender }}
+                    </span>
+
+                </span>
+
+            </div>
+
+
+
+            <!-- CONTACT -->
+
+            <div class="detail-row">
+
+                <span class="detail-label">
+                    Contact Number
+                </span>
+
+                <span class="detail-value contact-value">
+                    {{ patient.contact }}
+                </span>
+
+            </div>
+
+
+        </div>
+
+
+
+        <!-- ACTIONS -->
+
+        <div class="details-footer">
+
+            <a
+                href="/patients"
+                class="back-button"
+            >
+                ← Back to Patients
+            </a>
+
+
+            <a
+                href="/patients/{{ patient.id }}/edit"
+                class="edit-button"
+            >
+                Edit Patient
+            </a>
+
+        </div>
+
+
+    </div>
+
+
+
+    <div class="secure-note">
+
+        <span>✓</span>
+
+        Patient information is securely managed
+        through the hospital system.
+
+    </div>
+
+
+</main>
+
+
+</body>
+
+</html>

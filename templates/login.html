@@ -1,0 +1,1070 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>CarePoint | Hospital Login</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+
+        :root {
+            --primary: #0f766e;
+            --primary-dark: #115e59;
+            --primary-light: #ccfbf1;
+
+            --dark: #17201f;
+            --text: #374151;
+            --muted: #6b7280;
+
+            --white: #ffffff;
+            --background: #f7faf9;
+
+            --border: #dce8e5;
+        }
+
+
+        body {
+
+            min-height: 100vh;
+
+            font-family:
+                "Segoe UI",
+                Arial,
+                sans-serif;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #f7faf9 0%,
+                    #ecfdf5 100%
+                );
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            padding: 25px;
+
+            color: var(--text);
+        }
+
+
+        /* =========================================
+           MAIN LOGIN LAYOUT
+           ========================================= */
+
+        .login-wrapper {
+
+            width: 100%;
+
+            max-width: 1000px;
+
+            min-height: 590px;
+
+            background: white;
+
+            border-radius: 26px;
+
+            overflow: hidden;
+
+            display: grid;
+
+            grid-template-columns:
+                1fr
+                1fr;
+
+            box-shadow:
+                0 25px 70px
+                rgba(15, 118, 110, 0.13);
+
+            border:
+                1px solid
+                rgba(15, 118, 110, 0.08);
+        }
+
+
+        /* =========================================
+           LEFT BRANDING PANEL
+           ========================================= */
+
+        .brand-panel {
+
+            background:
+                linear-gradient(
+                    145deg,
+                    #115e59,
+                    #0f766e
+                );
+
+            color: white;
+
+            padding: 50px;
+
+            display: flex;
+
+            flex-direction: column;
+
+            justify-content: space-between;
+
+            position: relative;
+
+            overflow: hidden;
+        }
+
+
+        .brand-panel::before {
+
+            content: "";
+
+            position: absolute;
+
+            width: 300px;
+
+            height: 300px;
+
+            border-radius: 50%;
+
+            background:
+                rgba(255, 255, 255, 0.07);
+
+            top: -120px;
+
+            right: -100px;
+        }
+
+
+        .brand-panel::after {
+
+            content: "";
+
+            position: absolute;
+
+            width: 240px;
+
+            height: 240px;
+
+            border-radius: 50%;
+
+            background:
+                rgba(255, 255, 255, 0.05);
+
+            bottom: -100px;
+
+            left: -90px;
+        }
+
+
+        .brand-content {
+
+            position: relative;
+
+            z-index: 2;
+        }
+
+
+        .brand-logo {
+
+            width: 58px;
+
+            height: 58px;
+
+            border-radius: 17px;
+
+            background:
+                rgba(255, 255, 255, 0.15);
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            font-size: 29px;
+
+            font-weight: bold;
+
+            margin-bottom: 25px;
+
+            border:
+                1px solid
+                rgba(255, 255, 255, 0.14);
+        }
+
+
+        .brand-panel h1 {
+
+            font-size: 38px;
+
+            line-height: 1.12;
+
+            letter-spacing: -1.2px;
+
+            margin-bottom: 18px;
+        }
+
+
+        .brand-panel h1 span {
+
+            color: #99f6e4;
+        }
+
+
+        .brand-panel > .brand-content > p {
+
+            color:
+                rgba(255, 255, 255, 0.72);
+
+            font-size: 14px;
+
+            line-height: 1.8;
+
+            max-width: 390px;
+        }
+
+
+        .features {
+
+            position: relative;
+
+            z-index: 2;
+
+            display: grid;
+
+            gap: 13px;
+        }
+
+
+        .feature {
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 12px;
+
+            color:
+                rgba(255, 255, 255, 0.82);
+
+            font-size: 12px;
+        }
+
+
+        .feature-icon {
+
+            width: 30px;
+
+            height: 30px;
+
+            border-radius: 9px;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            background:
+                rgba(255, 255, 255, 0.12);
+
+            color: #99f6e4;
+
+            font-weight: bold;
+        }
+
+
+        /* =========================================
+           LOGIN PANEL
+           ========================================= */
+
+        .login-panel {
+
+            padding:
+                55px 60px;
+
+            display: flex;
+
+            flex-direction: column;
+
+            justify-content: center;
+        }
+
+
+        .login-heading {
+
+            margin-bottom: 30px;
+        }
+
+
+        .login-heading .label {
+
+            display: inline-block;
+
+            color:
+                var(--primary);
+
+            font-size: 11px;
+
+            font-weight: 800;
+
+            letter-spacing: 1.5px;
+
+            margin-bottom: 9px;
+        }
+
+
+        .login-heading h2 {
+
+            color:
+                var(--dark);
+
+            font-size: 32px;
+
+            letter-spacing: -1px;
+
+            margin-bottom: 7px;
+        }
+
+
+        .login-heading p {
+
+            color:
+                var(--muted);
+
+            font-size: 13px;
+        }
+
+
+        /* =========================================
+           MESSAGES
+           ========================================= */
+
+        .message {
+
+            display: none;
+
+            padding: 12px 14px;
+
+            border-radius: 10px;
+
+            margin-bottom: 18px;
+
+            font-size: 12px;
+
+            line-height: 1.5;
+        }
+
+
+        .error {
+
+            background: #fef2f2;
+
+            color: #991b1b;
+
+            border:
+                1px solid
+                #fecaca;
+        }
+
+
+        .success {
+
+            background: #ecfdf5;
+
+            color: #065f46;
+
+            border:
+                1px solid
+                #a7f3d0;
+        }
+
+
+        /* =========================================
+           FORM
+           ========================================= */
+
+        .form-group {
+
+            margin-bottom: 19px;
+        }
+
+
+        label {
+
+            display: block;
+
+            color:
+                var(--dark);
+
+            font-size: 12px;
+
+            font-weight: 700;
+
+            margin-bottom: 8px;
+        }
+
+
+        .input-wrapper {
+
+            position: relative;
+        }
+
+
+        .input-icon {
+
+            position: absolute;
+
+            left: 14px;
+
+            top: 50%;
+
+            transform:
+                translateY(-50%);
+
+            color:
+                #7c918e;
+
+            font-size: 15px;
+
+            pointer-events: none;
+        }
+
+
+        input {
+
+            width: 100%;
+
+            height: 48px;
+
+            padding:
+                0
+                14px
+                0
+                43px;
+
+            border:
+                1px solid
+                var(--border);
+
+            border-radius: 11px;
+
+            background:
+                #fbfdfc;
+
+            color:
+                var(--dark);
+
+            font-family: inherit;
+
+            font-size: 13px;
+
+            outline: none;
+
+            transition:
+                border 0.2s ease,
+                box-shadow 0.2s ease,
+                background 0.2s ease;
+        }
+
+
+        input::placeholder {
+
+            color:
+                #9ca3af;
+        }
+
+
+        input:focus {
+
+            border-color:
+                var(--primary);
+
+            background: white;
+
+            box-shadow:
+                0 0 0 4px
+                rgba(20, 184, 166, 0.10);
+        }
+
+
+        /* =========================================
+           LOGIN BUTTON
+           ========================================= */
+
+        .login-button {
+
+            width: 100%;
+
+            height: 50px;
+
+            border: none;
+
+            border-radius: 11px;
+
+            background:
+                var(--primary);
+
+            color: white;
+
+            font-family: inherit;
+
+            font-size: 14px;
+
+            font-weight: 700;
+
+            cursor: pointer;
+
+            margin-top: 5px;
+
+            box-shadow:
+                0 9px 22px
+                rgba(15, 118, 110, 0.20);
+
+            transition:
+                background 0.2s ease,
+                transform 0.2s ease,
+                box-shadow 0.2s ease;
+        }
+
+
+        .login-button:hover {
+
+            background:
+                var(--primary-dark);
+
+            transform:
+                translateY(-2px);
+
+            box-shadow:
+                0 13px 28px
+                rgba(15, 118, 110, 0.26);
+        }
+
+
+        .login-button:active {
+
+            transform:
+                translateY(0);
+        }
+
+
+        /* =========================================
+           BACK HOME
+           ========================================= */
+
+        .home {
+
+            text-align: center;
+
+            margin-top: 24px;
+        }
+
+
+        .home a {
+
+            color:
+                var(--primary);
+
+            text-decoration: none;
+
+            font-size: 12px;
+
+            font-weight: 600;
+        }
+
+
+        .home a:hover {
+
+            color:
+                var(--primary-dark);
+
+            text-decoration: underline;
+        }
+
+
+        /* =========================================
+           SECURITY NOTE
+           ========================================= */
+
+        .security-note {
+
+            margin-top: 28px;
+
+            padding-top: 18px;
+
+            border-top:
+                1px solid
+                #edf1f0;
+
+            text-align: center;
+
+            color:
+                #8a9694;
+
+            font-size: 10px;
+
+            line-height: 1.6;
+        }
+
+
+        .security-note span {
+
+            color:
+                var(--primary);
+
+            font-weight: 700;
+        }
+
+
+        /* =========================================
+           RESPONSIVE
+           ========================================= */
+
+        @media (max-width: 800px) {
+
+            .login-wrapper {
+
+                grid-template-columns:
+                    1fr;
+
+                max-width: 500px;
+            }
+
+
+            .brand-panel {
+
+                padding: 35px;
+
+                min-height: 300px;
+            }
+
+
+            .brand-panel h1 {
+
+                font-size: 30px;
+            }
+
+
+            .features {
+
+                display: none;
+            }
+
+
+            .login-panel {
+
+                padding:
+                    40px 35px;
+            }
+
+        }
+
+
+        @media (max-width: 480px) {
+
+            body {
+
+                padding: 12px;
+            }
+
+
+            .login-wrapper {
+
+                border-radius: 18px;
+            }
+
+
+            .brand-panel {
+
+                padding: 30px 25px;
+            }
+
+
+            .brand-panel h1 {
+
+                font-size: 27px;
+            }
+
+
+            .login-panel {
+
+                padding:
+                    35px 25px;
+            }
+
+
+            .login-heading h2 {
+
+                font-size: 27px;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<div class="login-wrapper">
+
+
+    <!-- =============================================
+         BRANDING
+         ============================================= -->
+
+    <section class="brand-panel">
+
+        <div class="brand-content">
+
+            <div class="brand-logo">
+                ✚
+            </div>
+
+
+            <h1>
+                Better Care.
+                <br>
+                <span>Better Management.</span>
+            </h1>
+
+
+            <p>
+                Welcome to the Hospital Patient Record
+                and Treatment Tracking System. Manage
+                hospital information through one secure
+                and organized platform.
+            </p>
+
+        </div>
+
+
+        <div class="features">
+
+            <div class="feature">
+
+                <span class="feature-icon">
+                    ✓
+                </span>
+
+                Secure JWT Authentication
+
+            </div>
+
+
+            <div class="feature">
+
+                <span class="feature-icon">
+                    ✓
+                </span>
+
+                Role-Based Access Control
+
+            </div>
+
+
+            <div class="feature">
+
+                <span class="feature-icon">
+                    ✓
+                </span>
+
+                Centralized Patient Records
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+
+    <!-- =============================================
+         LOGIN
+         ============================================= -->
+
+    <section class="login-panel">
+
+
+        <div class="login-heading">
+
+            <span class="label">
+                SECURE ACCESS
+            </span>
+
+            <h2>
+                Welcome back
+            </h2>
+
+            <p>
+                Sign in to access your hospital dashboard.
+            </p>
+
+        </div>
+
+
+        <!-- ERROR -->
+
+        <div
+            id="error"
+            class="message error"
+        ></div>
+
+
+        <!-- SUCCESS -->
+
+        <div
+            id="success"
+            class="message success"
+        ></div>
+
+
+        <!-- LOGIN FORM -->
+
+        <form id="loginForm">
+
+
+            <div class="form-group">
+
+                <label for="username">
+                    Username
+                </label>
+
+                <div class="input-wrapper">
+
+                    <span class="input-icon">
+                        ◉
+                    </span>
+
+                    <input
+                        type="text"
+                        id="username"
+                        placeholder="Enter your username"
+                        autocomplete="username"
+                        required
+                    >
+
+                </div>
+
+            </div>
+
+
+
+            <div class="form-group">
+
+                <label for="password">
+                    Password
+                </label>
+
+                <div class="input-wrapper">
+
+                    <span class="input-icon">
+                        ●
+                    </span>
+
+                    <input
+                        type="password"
+                        id="password"
+                        placeholder="Enter your password"
+                        autocomplete="current-password"
+                        required
+                    >
+
+                </div>
+
+            </div>
+
+
+            <button
+                type="submit"
+                class="login-button"
+            >
+                Sign In to Dashboard
+            </button>
+
+
+        </form>
+
+
+        <div class="home">
+
+            <a href="/">
+                ← Back to Home
+            </a>
+
+        </div>
+
+
+        <div class="security-note">
+
+            <span>Secure System</span>
+            &nbsp;•&nbsp;
+            Authorized hospital users only
+            <br>
+            Your access is protected by authentication
+            and role-based permissions.
+
+        </div>
+
+
+    </section>
+
+
+</div>
+
+
+
+<script>
+
+
+document
+    .getElementById("loginForm")
+    .addEventListener(
+        "submit",
+        async function(event) {
+
+            event.preventDefault();
+
+
+            const username =
+                document
+                .getElementById("username")
+                .value
+                .trim();
+
+
+            const password =
+                document
+                .getElementById("password")
+                .value;
+
+
+            const errorBox =
+                document
+                .getElementById("error");
+
+
+            const successBox =
+                document
+                .getElementById("success");
+
+
+            errorBox.style.display =
+                "none";
+
+            successBox.style.display =
+                "none";
+
+
+            try {
+
+                const response =
+                    await fetch(
+                        "/api/login",
+                        {
+                            method: "POST",
+
+                            headers: {
+                                "Content-Type":
+                                    "application/json"
+                            },
+
+                            body: JSON.stringify({
+                                username: username,
+                                password: password
+                            })
+                        }
+                    );
+
+
+                const result =
+                    await response.json();
+
+
+                if (!response.ok) {
+
+                    errorBox.innerText =
+                        result.message ||
+                        "Login failed";
+
+                    errorBox.style.display =
+                        "block";
+
+                    return;
+                }
+
+
+                localStorage.setItem(
+                    "access_token",
+                    result.access_token
+                );
+
+
+                localStorage.setItem(
+                    "user",
+                    JSON.stringify(
+                        result.user
+                    )
+                );
+
+
+                successBox.innerText =
+                    "Login successful. Redirecting...";
+
+                successBox.style.display =
+                    "block";
+
+
+                setTimeout(
+                    function() {
+
+                        window.location.href =
+                            "/";
+
+                    },
+                    800
+                );
+
+
+            }
+
+            catch (error) {
+
+                console.error(error);
+
+
+                errorBox.innerText =
+                    "Unable to connect to server.";
+
+                errorBox.style.display =
+                    "block";
+
+            }
+
+        }
+    );
+
+
+</script>
+
+
+</body>
+
+</html>

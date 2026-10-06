@@ -1,0 +1,767 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>
+        Hospital Management System
+    </title>
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='style.css') }}"
+    >
+
+</head>
+
+
+<body>
+
+
+<!-- =====================================================
+     NAVIGATION
+     ===================================================== -->
+
+<nav class="navbar">
+
+    <div class="brand">
+
+        <div class="brand-icon">
+            ✚
+        </div>
+
+        <div>
+            <strong>CarePoint</strong>
+
+            <span>
+                Hospital Management
+            </span>
+        </div>
+
+    </div>
+
+
+    <div class="nav-links">
+
+        <a href="/" class="active">
+            Home
+        </a>
+
+        <a href="/patients">
+            Patients
+        </a>
+
+        <a href="/doctors">
+            Doctors
+        </a>
+
+        <a href="/appointments">
+            Appointments
+        </a>
+
+        <a href="/treatments">
+            Treatments
+        </a>
+
+        <a href="/analytics">
+            Analytics
+        </a>
+
+        <a href="/data">
+            Data
+        </a>
+
+    </div>
+
+
+    <div class="nav-user">
+
+        <span
+            id="userInfo"
+            class="user-info"
+        ></span>
+
+        <a
+            id="loginButton"
+            href="/login"
+            class="btn btn-outline"
+        >
+            Login
+        </a>
+
+        <button
+            id="logoutButton"
+            class="btn btn-dark"
+            style="display: none;"
+            onclick="logout()"
+        >
+            Logout
+        </button>
+
+    </div>
+
+</nav>
+
+
+
+<!-- =====================================================
+     HERO SECTION
+     ===================================================== -->
+
+<section class="hero">
+
+    <div class="hero-content">
+
+        <div class="hero-badge">
+            ✦ Smart Healthcare Management
+        </div>
+
+
+        <h1>
+            Hospital Patient Record
+            <br>
+            <span>
+                & Treatment Tracking System
+            </span>
+        </h1>
+
+
+        <p>
+            A centralized platform to manage patients,
+            doctors, appointments, treatments and
+            hospital analytics efficiently.
+        </p>
+
+
+        <div class="hero-buttons">
+
+            <a
+                href="/patients"
+                class="btn btn-primary"
+            >
+                Explore Patients
+            </a>
+
+            <a
+                href="/analytics"
+                class="btn btn-light"
+            >
+                View Analytics
+            </a>
+
+        </div>
+
+    </div>
+
+
+    <div class="hero-visual">
+
+        <div class="medical-card">
+
+            <div class="medical-card-header">
+
+                <div class="medical-icon">
+                    ♥
+                </div>
+
+                <div>
+
+                    <strong>
+                        Hospital Dashboard
+                    </strong>
+
+                    <span>
+                        System Overview
+                    </span>
+
+                </div>
+
+            </div>
+
+
+            <div class="medical-stat-grid">
+
+                <div class="mini-stat">
+                    <strong>Patients</strong>
+                    <span>Records</span>
+                </div>
+
+                <div class="mini-stat">
+                    <strong>Doctors</strong>
+                    <span>Specialists</span>
+                </div>
+
+                <div class="mini-stat">
+                    <strong>Visits</strong>
+                    <span>Appointments</span>
+                </div>
+
+                <div class="mini-stat">
+                    <strong>Care</strong>
+                    <span>Treatments</span>
+                </div>
+
+            </div>
+
+
+            <div class="system-indicator">
+
+                <span class="online-dot"></span>
+
+                <span>
+                    System Operational
+                </span>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+
+<!-- =====================================================
+     QUICK STATEMENT
+     ===================================================== -->
+
+<section class="intro-section">
+
+    <div>
+
+        <span class="section-label">
+            EVERYTHING IN ONE PLACE
+        </span>
+
+        <h2>
+            Complete hospital management,
+            made simple.
+        </h2>
+
+    </div>
+
+
+    <p>
+        Manage essential hospital operations through
+        a single organized platform designed for
+        efficient record management and better
+        healthcare administration.
+    </p>
+
+</section>
+
+
+
+<!-- =====================================================
+     FEATURE CARDS
+     ===================================================== -->
+
+<section class="feature-section">
+
+
+    <div class="feature-card">
+
+        <div class="feature-icon">
+            ♙
+        </div>
+
+        <h3>
+            Patient Records
+        </h3>
+
+        <p>
+            Register, view, update and manage
+            patient information securely.
+        </p>
+
+        <a href="/patients">
+            Manage Patients →
+        </a>
+
+    </div>
+
+
+    <div class="feature-card">
+
+        <div class="feature-icon">
+            ✚
+        </div>
+
+        <h3>
+            Doctor Management
+        </h3>
+
+        <p>
+            Maintain doctor information,
+            specializations and contact details.
+        </p>
+
+        <a href="/doctors">
+            Manage Doctors →
+        </a>
+
+    </div>
+
+
+    <div class="feature-card">
+
+        <div class="feature-icon">
+            ◷
+        </div>
+
+        <h3>
+            Appointments
+        </h3>
+
+        <p>
+            Organize appointments, diagnoses
+            and treatment schedules.
+        </p>
+
+        <a href="/appointments">
+            View Appointments →
+        </a>
+
+    </div>
+
+
+    <div class="feature-card">
+
+        <div class="feature-icon">
+            ♡
+        </div>
+
+        <h3>
+            Treatment Tracking
+        </h3>
+
+        <p>
+            Track medicines, treatment notes
+            and patient treatment status.
+        </p>
+
+        <a href="/treatments">
+            Manage Treatments →
+        </a>
+
+    </div>
+
+
+    <div class="feature-card">
+
+        <div class="feature-icon">
+            ◒
+        </div>
+
+        <h3>
+            Hospital Analytics
+        </h3>
+
+        <p>
+            Analyze patient, appointment,
+            treatment and doctor statistics.
+        </p>
+
+        <a href="/analytics">
+            Open Analytics →
+        </a>
+
+    </div>
+
+
+    <div class="feature-card">
+
+        <div class="feature-icon">
+            ⇅
+        </div>
+
+        <h3>
+            Data Management
+        </h3>
+
+        <p>
+            Import and export hospital records
+            using CSV and Excel files.
+        </p>
+
+        <a href="/data">
+            Manage Data →
+        </a>
+
+    </div>
+
+</section>
+
+
+
+<!-- =====================================================
+     QUICK ACTIONS
+     ===================================================== -->
+
+<section class="quick-section">
+
+    <div class="quick-content">
+
+        <span class="section-label">
+            QUICK ACTIONS
+        </span>
+
+        <h2>
+            Get things done faster.
+        </h2>
+
+        <p>
+            Access commonly used hospital operations
+            directly from the dashboard.
+        </p>
+
+    </div>
+
+
+    <div class="quick-actions">
+
+        <a
+            href="/patients/new"
+            class="quick-action"
+        >
+            <span>＋</span>
+
+            <div>
+                <strong>
+                    Add Patient
+                </strong>
+
+                <small>
+                    Register a new patient
+                </small>
+            </div>
+
+        </a>
+
+
+        <a
+            href="/appointments/new"
+            class="quick-action"
+        >
+            <span>◷</span>
+
+            <div>
+                <strong>
+                    New Appointment
+                </strong>
+
+                <small>
+                    Schedule an appointment
+                </small>
+            </div>
+
+        </a>
+
+
+        <a
+            href="/analytics"
+            class="quick-action"
+        >
+            <span>◒</span>
+
+            <div>
+                <strong>
+                    View Analytics
+                </strong>
+
+                <small>
+                    Explore hospital statistics
+                </small>
+            </div>
+
+        </a>
+
+
+        <a
+            href="/data"
+            class="quick-action"
+        >
+            <span>⇅</span>
+
+            <div>
+                <strong>
+                    Data Management
+                </strong>
+
+                <small>
+                    Import or export records
+                </small>
+            </div>
+
+        </a>
+
+    </div>
+
+</section>
+
+
+
+<!-- =====================================================
+     SECURITY / SYSTEM SECTION
+     ===================================================== -->
+
+<section class="security-section">
+
+    <div class="security-item">
+
+        <span class="security-icon">
+            ✓
+        </span>
+
+        <div>
+
+            <strong>
+                Secure Access
+            </strong>
+
+            <p>
+                JWT authentication and
+                role-based access control.
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <div class="security-item">
+
+        <span class="security-icon">
+            ✓
+        </span>
+
+        <div>
+
+            <strong>
+                Reliable Records
+            </strong>
+
+            <p>
+                Centralized MySQL database
+                for hospital information.
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <div class="security-item">
+
+        <span class="security-icon">
+            ✓
+        </span>
+
+        <div>
+
+            <strong>
+                Data Insights
+            </strong>
+
+            <p>
+                Pandas and NumPy powered
+                hospital analytics.
+            </p>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+
+<!-- =====================================================
+     FOOTER
+     ===================================================== -->
+
+<footer class="footer">
+
+    <div>
+
+        <strong>
+            CarePoint Hospital Management
+        </strong>
+
+        <p>
+            Hospital Patient Record and
+            Treatment Tracking System
+        </p>
+
+    </div>
+
+
+    <div class="footer-tech">
+
+        Flask
+        &nbsp;•&nbsp;
+        MySQL
+        &nbsp;•&nbsp;
+        JWT
+        &nbsp;•&nbsp;
+        Pandas
+        &nbsp;•&nbsp;
+        NumPy
+
+    </div>
+
+
+    <div class="footer-health">
+
+        <span class="online-dot"></span>
+
+        System Online
+
+        &nbsp; | &nbsp;
+
+        <a href="/health">
+            Health Check
+        </a>
+
+    </div>
+
+</footer>
+
+
+
+<!-- =====================================================
+     LOGIN STATUS
+     ===================================================== -->
+
+<script>
+
+async function checkLogin() {
+
+    const token =
+        localStorage.getItem("access_token");
+
+    const loginButton =
+        document.getElementById("loginButton");
+
+    const logoutButton =
+        document.getElementById("logoutButton");
+
+    const userInfo =
+        document.getElementById("userInfo");
+
+
+    if (!token) {
+
+        loginButton.style.display =
+            "inline-block";
+
+        logoutButton.style.display =
+            "none";
+
+        userInfo.innerText = "";
+
+        return;
+    }
+
+
+    try {
+
+        const response =
+            await fetch(
+                "/api/me",
+                {
+                    method: "GET",
+
+                    headers: {
+                        "Authorization":
+                            "Bearer " + token
+                    }
+                }
+            );
+
+
+        const result =
+            await response.json();
+
+
+        if (!response.ok) {
+
+            localStorage.removeItem(
+                "access_token"
+            );
+
+            localStorage.removeItem(
+                "user"
+            );
+
+            loginButton.style.display =
+                "inline-block";
+
+            logoutButton.style.display =
+                "none";
+
+            userInfo.innerText = "";
+
+            return;
+        }
+
+
+        const user =
+            result.user;
+
+
+        loginButton.style.display =
+            "none";
+
+        logoutButton.style.display =
+            "inline-block";
+
+
+        userInfo.innerText =
+            user.username +
+            " • " +
+            user.role;
+
+    }
+
+    catch (error) {
+
+        console.error(error);
+
+    }
+
+}
+
+
+function logout() {
+
+    localStorage.removeItem(
+        "access_token"
+    );
+
+    localStorage.removeItem(
+        "user"
+    );
+
+    window.location.href =
+        "/login";
+
+}
+
+
+checkLogin();
+
+</script>
+
+
+</body>
+
+</html>

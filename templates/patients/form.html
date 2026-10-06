@@ -1,0 +1,878 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>
+        {% if patient %}
+            CarePoint | Edit Patient
+        {% else %}
+            CarePoint | Add Patient
+        {% endif %}
+    </title>
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='style.css') }}"
+    >
+
+    <style>
+
+        .page-container {
+            width: 92%;
+            max-width: 850px;
+            margin: 45px auto;
+        }
+
+        .page-heading {
+            text-align: center;
+            margin-bottom: 28px;
+        }
+
+        .page-heading small {
+            display: block;
+            color: #0f766e;
+            font-size: 11px;
+            font-weight: 800;
+            letter-spacing: 1.5px;
+            margin-bottom: 8px;
+        }
+
+        .page-heading h1 {
+            margin: 0;
+            color: #17201f;
+            font-size: 34px;
+            letter-spacing: -1px;
+        }
+
+        .page-heading p {
+            margin-top: 8px;
+            color: #6b7280;
+            font-size: 14px;
+        }
+
+        .form-card {
+            background: white;
+            border: 1px solid #e5e7eb;
+            border-radius: 20px;
+            padding: 34px;
+            box-shadow: 0 12px 35px rgba(0, 0, 0, 0.05);
+        }
+
+        .form-card-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding-bottom: 22px;
+            margin-bottom: 25px;
+            border-bottom: 1px solid #edf1f0;
+        }
+
+        .form-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 14px;
+            background: #ecfdf5;
+            color: #0f766e;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 21px;
+            font-weight: bold;
+        }
+
+        .form-card-header h2 {
+            margin: 0;
+            color: #17201f;
+            font-size: 18px;
+        }
+
+        .form-card-header span {
+            display: block;
+            color: #6b7280;
+            font-size: 12px;
+            margin-top: 4px;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group.full {
+            grid-column: 1 / -1;
+        }
+
+        label {
+            color: #374151;
+            font-size: 12px;
+            font-weight: 700;
+            margin-bottom: 7px;
+        }
+
+        .required {
+            color: #0f766e;
+        }
+
+        input,
+        select {
+            width: 100%;
+            box-sizing: border-box;
+            padding: 12px 13px;
+            border: 1px solid #d7dfdd;
+            border-radius: 10px;
+            background: #fbfdfc;
+            color: #17201f;
+            font-family: inherit;
+            font-size: 13px;
+            outline: none;
+            transition: 0.2s ease;
+        }
+
+        input:focus,
+        select:focus {
+            border-color: #0f766e;
+            background: white;
+            box-shadow: 0 0 0 3px rgba(15, 118, 110, 0.09);
+        }
+
+        input::placeholder {
+            color: #9ca3af;
+        }
+
+        .field-help {
+            margin-top: 5px;
+            color: #9ca3af;
+            font-size: 10px;
+        }
+
+        .form-actions {
+            display: flex;
+            gap: 12px;
+            margin-top: 28px;
+            padding-top: 22px;
+            border-top: 1px solid #edf1f0;
+        }
+
+        .submit-button {
+            flex: 1;
+            padding: 13px 18px;
+            border: none;
+            border-radius: 10px;
+            background: #0f766e;
+            color: white;
+            font-family: inherit;
+            font-size: 13px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: 0.2s ease;
+            box-shadow: 0 7px 18px rgba(15, 118, 110, 0.16);
+        }
+
+        .submit-button:hover {
+            background: #115e59;
+            transform: translateY(-1px);
+        }
+
+        .cancel-button {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 13px 18px;
+            border: 1px solid #d7dfdd;
+            border-radius: 10px;
+            background: white;
+            color: #4b5563;
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: 700;
+            transition: 0.2s ease;
+        }
+
+        .cancel-button:hover {
+            background: #f8faf9;
+            border-color: #b9c9c6;
+        }
+
+        #message {
+            display: none;
+            margin-top: 18px;
+            padding: 11px 14px;
+            border-radius: 9px;
+            text-align: center;
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        .secure-note {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 7px;
+            margin-top: 20px;
+            color: #6b7280;
+            font-size: 10px;
+        }
+
+        .secure-note span {
+            color: #0f766e;
+            font-weight: bold;
+        }
+
+        @media (max-width: 700px) {
+
+            .page-container {
+                width: 90%;
+                margin: 30px auto;
+            }
+
+            .form-card {
+                padding: 23px;
+            }
+
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .form-group.full {
+                grid-column: auto;
+            }
+
+            .page-heading h1 {
+                font-size: 29px;
+            }
+
+            .form-actions {
+                flex-direction: column;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<!-- =====================================================
+     NAVIGATION
+     ===================================================== -->
+
+<nav class="navbar">
+
+    <div class="brand">
+
+        <div class="brand-icon">
+            ✚
+        </div>
+
+        <div>
+
+            <strong>
+                CarePoint
+            </strong>
+
+            <span>
+                Hospital Management
+            </span>
+
+        </div>
+
+    </div>
+
+
+    <div class="nav-links">
+
+        <a href="/">
+            Home
+        </a>
+
+        <a href="/patients" class="active">
+            Patients
+        </a>
+
+        <a href="/doctors">
+            Doctors
+        </a>
+
+        <a href="/appointments">
+            Appointments
+        </a>
+
+        <a href="/treatments">
+            Treatments
+        </a>
+
+        <a href="/analytics">
+            Analytics
+        </a>
+
+        <a href="/data">
+            Data
+        </a>
+
+    </div>
+
+
+    <div class="nav-user">
+
+        <a
+            href="/login"
+            class="btn btn-outline"
+        >
+            Login
+        </a>
+
+    </div>
+
+</nav>
+
+
+
+<!-- =====================================================
+     MAIN
+     ===================================================== -->
+
+<main class="page-container">
+
+
+    <div class="page-heading">
+
+        <small>
+            PATIENT MANAGEMENT
+        </small>
+
+        <h1>
+
+            {% if patient %}
+                Edit Patient
+            {% else %}
+                Add New Patient
+            {% endif %}
+
+        </h1>
+
+        <p>
+            {% if patient %}
+                Update the patient's registered information.
+            {% else %}
+                Register a new patient in the hospital system.
+            {% endif %}
+        </p>
+
+    </div>
+
+
+
+    <!-- =================================================
+         FORM CARD
+         ================================================= -->
+
+    <div
+        class="form-card"
+
+        {% if patient %}
+
+        data-mode="edit"
+        data-patient-id="{{ patient.id }}"
+
+        {% else %}
+
+        data-mode="add"
+
+        {% endif %}
+    >
+
+
+        <div class="form-card-header">
+
+            <div class="form-icon">
+                ♙
+            </div>
+
+            <div>
+
+                <h2>
+                    Patient Information
+                </h2>
+
+                <span>
+                    Enter the required patient details below.
+                </span>
+
+            </div>
+
+        </div>
+
+
+
+        <form id="patientForm">
+
+
+            <div class="form-grid">
+
+
+                <!-- NAME -->
+
+                <div class="form-group full">
+
+                    <label for="name">
+                        Patient Name
+                        <span class="required">*</span>
+                    </label>
+
+                    <input
+                        type="text"
+                        id="name"
+                        name="name"
+                        placeholder="Enter patient's full name"
+                        value="{{ patient.name if patient else '' }}"
+                        required
+                    >
+
+                </div>
+
+
+
+                <!-- AGE -->
+
+                <div class="form-group">
+
+                    <label for="age">
+                        Age
+                        <span class="required">*</span>
+                    </label>
+
+                    <input
+                        type="number"
+                        id="age"
+                        name="age"
+                        min="0"
+                        max="150"
+                        placeholder="Enter age"
+                        value="{{ patient.age if patient else '' }}"
+                        required
+                    >
+
+                    <span class="field-help">
+                        Age must be between 0 and 150.
+                    </span>
+
+                </div>
+
+
+
+                <!-- GENDER -->
+
+                <div class="form-group">
+
+                    <label for="gender">
+                        Gender
+                        <span class="required">*</span>
+                    </label>
+
+                    <select
+                        id="gender"
+                        name="gender"
+                        required
+                    >
+
+                        <option value="">
+                            Select Gender
+                        </option>
+
+                        <option
+                            value="Male"
+
+                            {% if patient and patient.gender == "Male" %}
+                            selected
+                            {% endif %}
+                        >
+                            Male
+                        </option>
+
+                        <option
+                            value="Female"
+
+                            {% if patient and patient.gender == "Female" %}
+                            selected
+                            {% endif %}
+                        >
+                            Female
+                        </option>
+
+                        <option
+                            value="Other"
+
+                            {% if patient and patient.gender == "Other" %}
+                            selected
+                            {% endif %}
+                        >
+                            Other
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+
+                <!-- CONTACT -->
+
+                <div class="form-group full">
+
+                    <label for="contact">
+                        Contact Number
+                        <span class="required">*</span>
+                    </label>
+
+                    <input
+                        type="text"
+                        id="contact"
+                        name="contact"
+                        placeholder="Enter contact number"
+                        value="{{ patient.contact if patient else '' }}"
+                        maxlength="15"
+                        required
+                    >
+
+                    <span class="field-help">
+                        Maximum 15 characters.
+                    </span>
+
+                </div>
+
+
+            </div>
+
+
+
+            <!-- ACTIONS -->
+
+            <div class="form-actions">
+
+                <a
+                    href="/patients"
+                    class="cancel-button"
+                >
+                    ← Cancel
+                </a>
+
+
+                <button
+                    type="submit"
+                    class="submit-button"
+                >
+
+                    {% if patient %}
+                        Update Patient
+                    {% else %}
+                        Add Patient
+                    {% endif %}
+
+                </button>
+
+            </div>
+
+
+        </form>
+
+
+
+        <div id="message"></div>
+
+
+        <div class="secure-note">
+
+            <span>✓</span>
+
+            Patient information is securely managed
+            through the hospital system.
+
+        </div>
+
+
+    </div>
+
+
+</main>
+
+
+
+<!-- =====================================================
+     JAVASCRIPT
+     ===================================================== -->
+
+<script>
+
+const container =
+    document.querySelector(".form-card");
+
+
+const form =
+    document.getElementById("patientForm");
+
+
+const message =
+    document.getElementById("message");
+
+
+
+form.addEventListener(
+    "submit",
+    async function(event) {
+
+        event.preventDefault();
+
+
+        // Get JWT token
+
+        const token =
+            localStorage.getItem("access_token");
+
+
+        // Check login
+
+        if (!token) {
+
+            alert("Please login first.");
+
+            window.location.href =
+                "/login";
+
+            return;
+
+        }
+
+
+        // Get form values
+
+        const name =
+            document
+                .getElementById("name")
+                .value
+                .trim();
+
+
+        const age =
+            document
+                .getElementById("age")
+                .value;
+
+
+        const gender =
+            document
+                .getElementById("gender")
+                .value;
+
+
+        const contact =
+            document
+                .getElementById("contact")
+                .value
+                .trim();
+
+
+
+        // Create patient object
+
+        const patientData = {
+
+            name: name,
+
+            age: parseInt(age),
+
+            gender: gender,
+
+            contact: contact
+
+        };
+
+
+
+        // Check whether Add or Edit
+
+        const mode =
+            container.dataset.mode;
+
+
+        let url;
+
+        let method;
+
+
+
+        if (mode === "edit") {
+
+            const patientId =
+                container.dataset.patientId;
+
+
+            url =
+                "/api/patients/" +
+                patientId;
+
+
+            method =
+                "PUT";
+
+        }
+
+        else {
+
+            url =
+                "/api/patients";
+
+
+            method =
+                "POST";
+
+        }
+
+
+
+        try {
+
+            const response =
+                await fetch(
+                    url,
+                    {
+
+                        method: method,
+
+                        headers: {
+
+                            "Content-Type":
+                                "application/json",
+
+                            "Authorization":
+                                "Bearer " +
+                                token
+
+                        },
+
+                        body:
+                            JSON.stringify(
+                                patientData
+                            )
+
+                    }
+                );
+
+
+
+            const data =
+                await response.json();
+
+
+
+            if (response.ok) {
+
+                message.style.display =
+                    "block";
+
+                message.style.color =
+                    "#0f766e";
+
+                message.style.background =
+                    "#ecfdf5";
+
+                message.textContent =
+                    data.message ||
+                    "Patient saved successfully.";
+
+
+                setTimeout(
+                    function() {
+
+                        if (mode === "edit") {
+
+                            const patientId =
+                                container
+                                    .dataset
+                                    .patientId;
+
+
+                            window.location.href =
+                                "/patients/" +
+                                patientId;
+
+                        }
+
+                        else {
+
+                            window.location.href =
+                                "/patients";
+
+                        }
+
+                    },
+                    1000
+                );
+
+            }
+
+            else {
+
+                message.style.display =
+                    "block";
+
+                message.style.color =
+                    "#b91c1c";
+
+                message.style.background =
+                    "#fef2f2";
+
+                message.textContent =
+                    data.message ||
+                    "Unable to save patient.";
+
+            }
+
+
+        }
+
+        catch (error) {
+
+            console.error(error);
+
+
+            message.style.display =
+                "block";
+
+            message.style.color =
+                "#b91c1c";
+
+            message.style.background =
+                "#fef2f2";
+
+            message.textContent =
+                "Unable to connect to the server.";
+
+        }
+
+    }
+);
+
+</script>
+
+
+</body>
+
+</html>

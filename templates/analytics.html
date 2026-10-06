@@ -1,0 +1,1448 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>CarePoint | Analytics</title>
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='style.css') }}"
+    >
+
+    <style>
+
+        /* =================================================
+           ANALYTICS PAGE
+           ================================================= */
+
+        .analytics-page {
+            padding: 42px 0 60px;
+        }
+
+        .analytics-hero {
+            background:
+                linear-gradient(
+                    135deg,
+                    #0f766e,
+                    #0d9488
+                );
+
+            color: white;
+
+            border-radius: 24px;
+
+            padding: 42px;
+
+            margin-bottom: 34px;
+
+            box-shadow:
+                0 18px 45px
+                rgba(15, 118, 110, 0.20);
+        }
+
+        .analytics-hero h1 {
+            margin: 0 0 10px;
+
+            font-size: 34px;
+        }
+
+        .analytics-hero p {
+            margin: 0;
+
+            color: rgba(255,255,255,0.88);
+
+            font-size: 16px;
+        }
+
+        .analytics-badge {
+            display: inline-block;
+
+            padding: 7px 13px;
+
+            margin-bottom: 16px;
+
+            border-radius: 999px;
+
+            background: rgba(255,255,255,0.16);
+
+            font-size: 13px;
+
+            font-weight: 700;
+
+            letter-spacing: 0.4px;
+        }
+
+        .section-title {
+            display: flex;
+
+            align-items: center;
+
+            gap: 12px;
+
+            margin: 38px 0 18px;
+
+            color: #172b2b;
+
+            font-size: 22px;
+        }
+
+        .section-title::before {
+            content: "";
+
+            width: 5px;
+
+            height: 25px;
+
+            border-radius: 5px;
+
+            background: #0d9488;
+        }
+
+        .dashboard {
+            display: grid;
+
+            grid-template-columns:
+                repeat(
+                    auto-fit,
+                    minmax(190px, 1fr)
+                );
+
+            gap: 18px;
+        }
+
+        .analytics-card {
+            background: white;
+
+            border: 1px solid #e5eeee;
+
+            border-radius: 18px;
+
+            padding: 23px;
+
+            min-height: 145px;
+
+            display: flex;
+
+            flex-direction: column;
+
+            justify-content: space-between;
+
+            box-shadow:
+                0 8px 25px
+                rgba(15, 23, 42, 0.06);
+
+            transition:
+                transform 0.2s ease,
+                box-shadow 0.2s ease;
+        }
+
+        .analytics-card:hover {
+            transform: translateY(-3px);
+
+            box-shadow:
+                0 14px 32px
+                rgba(15, 23, 42, 0.10);
+        }
+
+        .card-label {
+            color: #64748b;
+
+            font-size: 14px;
+
+            font-weight: 600;
+        }
+
+        .value {
+            color: #0f766e;
+
+            font-size: 32px;
+
+            line-height: 1;
+
+            font-weight: 800;
+
+            margin-top: 18px;
+        }
+
+        .value-small {
+            font-size: 27px;
+        }
+
+        .table-container {
+            overflow-x: auto;
+
+            background: white;
+
+            border:
+                1px solid #e5eeee;
+
+            border-radius: 18px;
+
+            box-shadow:
+                0 8px 25px
+                rgba(15, 23, 42, 0.06);
+        }
+
+        table {
+            width: 100%;
+
+            border-collapse: collapse;
+
+            min-width: 500px;
+        }
+
+        th,
+        td {
+            padding: 16px 18px;
+
+            text-align: left;
+
+            border-bottom:
+                1px solid #edf2f2;
+        }
+
+        th {
+            background: #134e4a;
+
+            color: white;
+
+            font-size: 13px;
+
+            text-transform: uppercase;
+
+            letter-spacing: 0.5px;
+        }
+
+        td {
+            color: #334155;
+
+            font-size: 14px;
+        }
+
+        tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        tbody tr:hover {
+            background: #f0fdfa;
+        }
+
+        .number-cell {
+            font-weight: 800;
+
+            color: #0f766e;
+        }
+
+        .status-pill {
+            display: inline-block;
+
+            padding: 6px 11px;
+
+            border-radius: 999px;
+
+            background: #ccfbf1;
+
+            color: #115e59;
+
+            font-size: 12px;
+
+            font-weight: 700;
+        }
+
+        .loading {
+            background: white;
+
+            border: 1px solid #e5eeee;
+
+            border-radius: 18px;
+
+            padding: 45px;
+
+            text-align: center;
+
+            color: #64748b;
+
+            font-size: 16px;
+
+            box-shadow:
+                0 8px 25px
+                rgba(15, 23, 42, 0.05);
+        }
+
+        .loading-icon {
+            width: 42px;
+
+            height: 42px;
+
+            margin: 0 auto 16px;
+
+            border:
+                4px solid #d1fae5;
+
+            border-top-color: #0d9488;
+
+            border-radius: 50%;
+
+            animation:
+                spin 0.9s linear infinite;
+        }
+
+        @keyframes spin {
+
+            to {
+                transform: rotate(360deg);
+            }
+
+        }
+
+        .error {
+            display: none;
+
+            background: #fff1f2;
+
+            color: #9f1239;
+
+            border:
+                1px solid #fecdd3;
+
+            padding: 15px 18px;
+
+            border-radius: 12px;
+
+            margin-bottom: 22px;
+
+            font-weight: 600;
+        }
+
+        .buttons {
+            display: flex;
+
+            flex-wrap: wrap;
+
+            justify-content: center;
+
+            gap: 10px;
+
+            margin-top: 42px;
+        }
+
+        .button {
+            display: inline-flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            padding: 12px 18px;
+
+            background: #0f766e;
+
+            color: white;
+
+            text-decoration: none;
+
+            border-radius: 10px;
+
+            font-size: 14px;
+
+            font-weight: 700;
+
+            transition:
+                background 0.2s ease,
+                transform 0.2s ease;
+        }
+
+        .button:hover {
+            background: #115e59;
+
+            transform: translateY(-1px);
+        }
+
+        .button.secondary {
+            background: white;
+
+            color: #0f766e;
+
+            border:
+                1px solid #99f6e4;
+        }
+
+        .button.secondary:hover {
+            background: #f0fdfa;
+        }
+
+        .analytics-footer-note {
+            text-align: center;
+
+            margin-top: 24px;
+
+            color: #94a3b8;
+
+            font-size: 13px;
+        }
+
+        @media (max-width: 700px) {
+
+            .analytics-page {
+                padding-top: 25px;
+            }
+
+            .analytics-hero {
+                padding: 28px 22px;
+
+                border-radius: 18px;
+            }
+
+            .analytics-hero h1 {
+                font-size: 27px;
+            }
+
+            .section-title {
+                font-size: 19px;
+            }
+
+            .analytics-card {
+                min-height: 125px;
+            }
+
+            .value {
+                font-size: 28px;
+            }
+
+            .buttons {
+                flex-direction: column;
+            }
+
+            .button {
+                width: 100%;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+    <!-- =================================================
+         NAVBAR
+         ================================================= -->
+
+    <nav class="navbar">
+
+        <div class="nav-container">
+
+            <a
+                href="/"
+                class="brand"
+            >
+                <span class="brand-mark">CP</span>
+
+                <span>
+                    CarePoint
+                </span>
+            </a>
+
+
+            <div class="nav-links">
+
+                <a href="/">
+                    Home
+                </a>
+
+                <a href="/patients">
+                    Patients
+                </a>
+
+                <a href="/doctors">
+                    Doctors
+                </a>
+
+                <a href="/appointments">
+                    Appointments
+                </a>
+
+                <a href="/treatments">
+                    Treatments
+                </a>
+
+            </div>
+
+        </div>
+
+    </nav>
+
+
+    <!-- =================================================
+         MAIN
+         ================================================= -->
+
+    <main class="container analytics-page">
+
+
+        <!-- =================================================
+             HERO
+             ================================================= -->
+
+        <section class="analytics-hero">
+
+            <div class="analytics-badge">
+                CAREPOINT ANALYTICS
+            </div>
+
+            <h1>
+                Hospital Analytics Dashboard
+            </h1>
+
+            <p>
+                Patient, appointment, treatment and
+                doctor performance insights in one place.
+            </p>
+
+        </section>
+
+
+        <!-- =================================================
+             ERROR
+             ================================================= -->
+
+        <div
+            id="error"
+            class="error"
+        ></div>
+
+
+        <!-- =================================================
+             LOADING
+             ================================================= -->
+
+        <div
+            id="loading"
+            class="loading"
+        >
+
+            <div class="loading-icon"></div>
+
+            Loading hospital analytics...
+
+        </div>
+
+
+        <!-- =================================================
+             PATIENT ANALYTICS
+             ================================================= -->
+
+        <h2 class="section-title">
+            Patient Analytics
+        </h2>
+
+
+        <div
+            id="patientDashboard"
+            class="dashboard"
+            style="display: none;"
+        >
+
+
+            <div class="analytics-card">
+
+                <div class="card-label">
+                    Total Patients
+                </div>
+
+                <div
+                    id="totalPatients"
+                    class="value"
+                >
+                    0
+                </div>
+
+            </div>
+
+
+            <div class="analytics-card">
+
+                <div class="card-label">
+                    Average Age
+                </div>
+
+                <div
+                    id="averageAge"
+                    class="value"
+                >
+                    0
+                </div>
+
+            </div>
+
+
+            <div class="analytics-card">
+
+                <div class="card-label">
+                    Minimum Age
+                </div>
+
+                <div
+                    id="minimumAge"
+                    class="value"
+                >
+                    0
+                </div>
+
+            </div>
+
+
+            <div class="analytics-card">
+
+                <div class="card-label">
+                    Maximum Age
+                </div>
+
+                <div
+                    id="maximumAge"
+                    class="value"
+                >
+                    0
+                </div>
+
+            </div>
+
+
+            <div class="analytics-card">
+
+                <div class="card-label">
+                    Male Patients
+                </div>
+
+                <div
+                    id="malePatients"
+                    class="value"
+                >
+                    0
+                </div>
+
+            </div>
+
+
+            <div class="analytics-card">
+
+                <div class="card-label">
+                    Female Patients
+                </div>
+
+                <div
+                    id="femalePatients"
+                    class="value"
+                >
+                    0
+                </div>
+
+            </div>
+
+
+            <div class="analytics-card">
+
+                <div class="card-label">
+                    Age Std. Deviation
+                </div>
+
+                <div
+                    id="ageStd"
+                    class="value value-small"
+                >
+                    0
+                </div>
+
+            </div>
+
+
+        </div>
+
+
+        <!-- =================================================
+             GENDER DISTRIBUTION
+             ================================================= -->
+
+        <h2 class="section-title">
+            Gender Distribution
+        </h2>
+
+
+        <div class="table-container">
+
+            <table>
+
+                <thead>
+
+                    <tr>
+
+                        <th>
+                            Gender
+                        </th>
+
+                        <th>
+                            Number of Patients
+                        </th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody id="genderTable"></tbody>
+
+            </table>
+
+        </div>
+
+
+        <!-- =================================================
+             APPOINTMENT ANALYTICS
+             ================================================= -->
+
+        <h2 class="section-title">
+            Appointment Analytics
+        </h2>
+
+
+        <div
+            id="appointmentDashboard"
+            class="dashboard"
+            style="display: none;"
+        >
+
+            <div class="analytics-card">
+
+                <div class="card-label">
+                    Total Appointments
+                </div>
+
+                <div
+                    id="totalAppointments"
+                    class="value"
+                >
+                    0
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="table-container">
+
+            <table>
+
+                <thead>
+
+                    <tr>
+
+                        <th>
+                            Appointment Status
+                        </th>
+
+                        <th>
+                            Number of Appointments
+                        </th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody id="appointmentTable"></tbody>
+
+            </table>
+
+        </div>
+
+
+        <!-- =================================================
+             TREATMENT ANALYTICS
+             ================================================= -->
+
+        <h2 class="section-title">
+            Treatment Analytics
+        </h2>
+
+
+        <div
+            id="treatmentDashboard"
+            class="dashboard"
+            style="display: none;"
+        >
+
+            <div class="analytics-card">
+
+                <div class="card-label">
+                    Total Treatments
+                </div>
+
+                <div
+                    id="totalTreatments"
+                    class="value"
+                >
+                    0
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="table-container">
+
+            <table>
+
+                <thead>
+
+                    <tr>
+
+                        <th>
+                            Treatment Status
+                        </th>
+
+                        <th>
+                            Number of Treatments
+                        </th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody id="treatmentTable"></tbody>
+
+            </table>
+
+        </div>
+
+
+        <!-- =================================================
+             DOCTOR ANALYTICS
+             ================================================= -->
+
+        <h2 class="section-title">
+            Doctor-wise Appointments
+        </h2>
+
+
+        <div class="table-container">
+
+            <table>
+
+                <thead>
+
+                    <tr>
+
+                        <th>
+                            Doctor
+                        </th>
+
+                        <th>
+                            Specialization
+                        </th>
+
+                        <th>
+                            Appointments
+                        </th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody id="doctorTable"></tbody>
+
+            </table>
+
+        </div>
+
+
+        <!-- =================================================
+             NAVIGATION BUTTONS
+             ================================================= -->
+
+        <div class="buttons">
+
+            <a
+                href="/"
+                class="button secondary"
+            >
+                Back to Home
+            </a>
+
+            <a
+                href="/patients"
+                class="button"
+            >
+                View Patients
+            </a>
+
+            <a
+                href="/appointments"
+                class="button"
+            >
+                View Appointments
+            </a>
+
+            <a
+                href="/treatments"
+                class="button"
+            >
+                View Treatments
+            </a>
+
+            <a
+                href="/data"
+                class="button"
+            >
+                Import / Export
+            </a>
+
+        </div>
+
+
+        <div class="analytics-footer-note">
+
+            CarePoint Hospital Management System
+            &nbsp;•&nbsp;
+            Analytics & Insights
+
+        </div>
+
+
+    </main>
+
+
+    <!-- =================================================
+         JAVASCRIPT
+         ================================================= -->
+
+    <script>
+
+
+        // =================================================
+        // LOAD HOSPITAL ANALYTICS
+        // =================================================
+
+        async function loadAnalytics() {
+
+            try {
+
+                const response = await fetch(
+                    "/api/analytics/hospital"
+                );
+
+
+                const result =
+                    await response.json();
+
+
+                if (!result.success) {
+
+                    showError(
+                        "Unable to load analytics."
+                    );
+
+                    return;
+                }
+
+
+                const data =
+                    result.analytics;
+
+
+                // =================================================
+                // PATIENT DATA
+                // =================================================
+
+                const patients =
+                    data.patients;
+
+
+                document.getElementById(
+                    "totalPatients"
+                ).innerText =
+                    patients.total;
+
+
+                document.getElementById(
+                    "averageAge"
+                ).innerText =
+                    patients.average_age;
+
+
+                document.getElementById(
+                    "minimumAge"
+                ).innerText =
+                    patients.minimum_age;
+
+
+                document.getElementById(
+                    "maximumAge"
+                ).innerText =
+                    patients.maximum_age;
+
+
+                document.getElementById(
+                    "malePatients"
+                ).innerText =
+                    patients.male;
+
+
+                document.getElementById(
+                    "femalePatients"
+                ).innerText =
+                    patients.female;
+
+
+                document.getElementById(
+                    "ageStd"
+                ).innerText =
+                    patients.age_standard_deviation;
+
+
+                // =================================================
+                // GENDER TABLE
+                // =================================================
+
+                const genderTable =
+                    document.getElementById(
+                        "genderTable"
+                    );
+
+
+                genderTable.innerHTML = "";
+
+
+                const genderDistribution =
+                    patients.gender_distribution;
+
+
+                for (
+                    const gender
+                    in genderDistribution
+                ) {
+
+                    const row =
+                        document.createElement(
+                            "tr"
+                        );
+
+
+                    const genderCell =
+                        document.createElement(
+                            "td"
+                        );
+
+
+                    genderCell.innerText =
+                        gender;
+
+
+                    const countCell =
+                        document.createElement(
+                            "td"
+                        );
+
+
+                    countCell.innerText =
+                        genderDistribution[
+                            gender
+                        ];
+
+
+                    countCell.className =
+                        "number-cell";
+
+
+                    row.appendChild(
+                        genderCell
+                    );
+
+
+                    row.appendChild(
+                        countCell
+                    );
+
+
+                    genderTable.appendChild(
+                        row
+                    );
+
+                }
+
+
+                // =================================================
+                // APPOINTMENT DATA
+                // =================================================
+
+                const appointments =
+                    data.appointments;
+
+
+                document.getElementById(
+                    "totalAppointments"
+                ).innerText =
+                    appointments.total;
+
+
+                document.getElementById(
+                    "appointmentDashboard"
+                ).style.display =
+                    "grid";
+
+
+                const appointmentTable =
+                    document.getElementById(
+                        "appointmentTable"
+                    );
+
+
+                appointmentTable.innerHTML =
+                    "";
+
+
+                const appointmentStatus =
+                    appointments.status_distribution;
+
+
+                for (
+                    const status
+                    in appointmentStatus
+                ) {
+
+                    const row =
+                        document.createElement(
+                            "tr"
+                        );
+
+
+                    const statusCell =
+                        document.createElement(
+                            "td"
+                        );
+
+
+                    const statusBadge =
+                        document.createElement(
+                            "span"
+                        );
+
+
+                    statusBadge.className =
+                        "status-pill";
+
+
+                    statusBadge.innerText =
+                        status;
+
+
+                    statusCell.appendChild(
+                        statusBadge
+                    );
+
+
+                    const countCell =
+                        document.createElement(
+                            "td"
+                        );
+
+
+                    countCell.innerText =
+                        appointmentStatus[
+                            status
+                        ];
+
+
+                    countCell.className =
+                        "number-cell";
+
+
+                    row.appendChild(
+                        statusCell
+                    );
+
+
+                    row.appendChild(
+                        countCell
+                    );
+
+
+                    appointmentTable.appendChild(
+                        row
+                    );
+
+                }
+
+
+                // =================================================
+                // TREATMENT DATA
+                // =================================================
+
+                const treatments =
+                    data.treatments;
+
+
+                document.getElementById(
+                    "totalTreatments"
+                ).innerText =
+                    treatments.total;
+
+
+                document.getElementById(
+                    "treatmentDashboard"
+                ).style.display =
+                    "grid";
+
+
+                const treatmentTable =
+                    document.getElementById(
+                        "treatmentTable"
+                    );
+
+
+                treatmentTable.innerHTML =
+                    "";
+
+
+                const treatmentStatus =
+                    treatments.status_distribution;
+
+
+                for (
+                    const status
+                    in treatmentStatus
+                ) {
+
+                    const row =
+                        document.createElement(
+                            "tr"
+                        );
+
+
+                    const statusCell =
+                        document.createElement(
+                            "td"
+                        );
+
+
+                    const statusBadge =
+                        document.createElement(
+                            "span"
+                        );
+
+
+                    statusBadge.className =
+                        "status-pill";
+
+
+                    statusBadge.innerText =
+                        status;
+
+
+                    statusCell.appendChild(
+                        statusBadge
+                    );
+
+
+                    const countCell =
+                        document.createElement(
+                            "td"
+                        );
+
+
+                    countCell.innerText =
+                        treatmentStatus[
+                            status
+                        ];
+
+
+                    countCell.className =
+                        "number-cell";
+
+
+                    row.appendChild(
+                        statusCell
+                    );
+
+
+                    row.appendChild(
+                        countCell
+                    );
+
+
+                    treatmentTable.appendChild(
+                        row
+                    );
+
+                }
+
+
+                // =================================================
+                // DOCTOR DATA
+                // =================================================
+
+                const doctors =
+                    data.doctors;
+
+
+                const doctorTable =
+                    document.getElementById(
+                        "doctorTable"
+                    );
+
+
+                doctorTable.innerHTML =
+                    "";
+
+
+                const doctorAppointments =
+                    doctors.doctor_appointments;
+
+
+                doctorAppointments.forEach(
+                    function(doctor) {
+
+                        const row =
+                            document.createElement(
+                                "tr"
+                            );
+
+
+                        const nameCell =
+                            document.createElement(
+                                "td"
+                            );
+
+
+                        nameCell.innerText =
+                            doctor.doctor_name;
+
+
+                        const specializationCell =
+                            document.createElement(
+                                "td"
+                            );
+
+
+                        specializationCell.innerText =
+                            doctor.specialization;
+
+
+                        const countCell =
+                            document.createElement(
+                                "td"
+                            );
+
+
+                        countCell.innerText =
+                            doctor.appointment_count;
+
+
+                        countCell.className =
+                            "number-cell";
+
+
+                        row.appendChild(
+                            nameCell
+                        );
+
+
+                        row.appendChild(
+                            specializationCell
+                        );
+
+
+                        row.appendChild(
+                            countCell
+                        );
+
+
+                        doctorTable.appendChild(
+                            row
+                        );
+
+                    }
+                );
+
+
+                // =================================================
+                // SHOW DASHBOARD
+                // =================================================
+
+                document.getElementById(
+                    "loading"
+                ).style.display =
+                    "none";
+
+
+                document.getElementById(
+                    "patientDashboard"
+                ).style.display =
+                    "grid";
+
+
+            } catch (error) {
+
+                console.error(error);
+
+
+                showError(
+                    "Error connecting to the server."
+                );
+
+            }
+
+        }
+
+
+        // =================================================
+        // ERROR MESSAGE
+        // =================================================
+
+        function showError(message) {
+
+            document.getElementById(
+                "loading"
+            ).style.display =
+                "none";
+
+
+            const errorBox =
+                document.getElementById(
+                    "error"
+                );
+
+
+            errorBox.innerText =
+                message;
+
+
+            errorBox.style.display =
+                "block";
+
+        }
+
+
+        // =================================================
+        // START DASHBOARD
+        // =================================================
+
+        loadAnalytics();
+
+
+    </script>
+
+
+</body>
+
+</html>

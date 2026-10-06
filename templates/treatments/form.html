@@ -1,0 +1,1048 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>
+        {% if treatment %}
+            Edit Treatment | CarePoint
+        {% else %}
+            Add Treatment | CarePoint
+        {% endif %}
+    </title>
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='style.css') }}"
+    >
+
+    <style>
+
+        .page-wrapper {
+            width: 92%;
+            max-width: 1050px;
+            margin: 40px auto;
+        }
+
+        .page-header {
+            margin-bottom: 25px;
+        }
+
+        .page-header h1 {
+            margin: 0 0 8px;
+            font-size: 32px;
+            color: #17211d;
+        }
+
+        .page-header p {
+            margin: 0;
+            color: #66736d;
+            font-size: 15px;
+        }
+
+        .form-card {
+            background: white;
+            border: 1px solid #e3ebe7;
+            border-radius: 18px;
+            padding: 30px;
+            box-shadow: 0 8px 28px rgba(31, 53, 44, 0.07);
+        }
+
+        .form-section {
+            margin-bottom: 28px;
+        }
+
+        .section-title {
+            margin: 0 0 18px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #e6eeea;
+            color: #0f766e;
+            font-size: 17px;
+            font-weight: 700;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group.full {
+            grid-column: 1 / -1;
+        }
+
+        label {
+            margin-bottom: 7px;
+            color: #34423b;
+            font-size: 13px;
+            font-weight: 700;
+        }
+
+        input,
+        select,
+        textarea {
+            width: 100%;
+            box-sizing: border-box;
+            padding: 12px 13px;
+            border: 1px solid #d7e2dd;
+            border-radius: 10px;
+            background: #fbfdfc;
+            color: #26332d;
+            font-family: inherit;
+            font-size: 14px;
+            outline: none;
+            transition: 0.2s ease;
+        }
+
+        input:focus,
+        select:focus,
+        textarea:focus {
+            border-color: #0f766e;
+            box-shadow: 0 0 0 3px rgba(15, 118, 110, 0.10);
+            background: white;
+        }
+
+        textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        .required {
+            color: #b42318;
+        }
+
+        .field-help {
+            margin-top: 5px;
+            color: #7a8781;
+            font-size: 12px;
+        }
+
+        .message {
+            display: none;
+            margin-top: 20px;
+            padding: 13px 16px;
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .message.success {
+            display: block;
+            background: #eaf7f3;
+            border: 1px solid #bfe5da;
+            color: #0f625b;
+        }
+
+        .message.error {
+            display: block;
+            background: #fff1f1;
+            border: 1px solid #f1c5c5;
+            color: #a12a2a;
+        }
+
+        .form-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            margin-top: 25px;
+            padding-top: 20px;
+            border-top: 1px solid #e6eeea;
+        }
+
+        .btn {
+            border: none;
+            border-radius: 10px;
+            padding: 11px 20px;
+            font-size: 14px;
+            font-weight: 700;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            transition: 0.2s ease;
+        }
+
+        .btn:hover {
+            transform: translateY(-1px);
+        }
+
+        .btn-cancel {
+            background: #eef3f0;
+            color: #34423b;
+        }
+
+        .btn-save {
+            background: #0f766e;
+            color: white;
+        }
+
+        .btn-save:hover {
+            background: #0b625b;
+        }
+
+        .btn-save:disabled {
+            opacity: 0.65;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-top: 20px;
+            color: #0f766e;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 650;
+        }
+
+        .back-link:hover {
+            text-decoration: underline;
+        }
+
+        .footer-note {
+            text-align: center;
+            color: #89938e;
+            font-size: 12px;
+            padding: 25px 0 10px;
+        }
+
+        @media (max-width: 700px) {
+
+            .page-wrapper {
+                width: 94%;
+                margin: 25px auto;
+            }
+
+            .form-card {
+                padding: 22px;
+            }
+
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .form-group.full {
+                grid-column: auto;
+            }
+
+            .form-actions {
+                flex-direction: column-reverse;
+            }
+
+            .btn {
+                width: 100%;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+<div class="page-wrapper">
+
+    <!-- PAGE HEADER -->
+
+    <div class="page-header">
+
+        <h1>
+
+            {% if treatment %}
+                Edit Treatment
+            {% else %}
+                Add New Treatment
+            {% endif %}
+
+        </h1>
+
+        <p>
+
+            {% if treatment %}
+                Update the treatment information and save the latest changes.
+            {% else %}
+                Create a new treatment record for a hospital appointment.
+            {% endif %}
+
+        </p>
+
+    </div>
+
+
+    <!-- FORM CARD -->
+
+    <div class="form-card">
+
+        <form id="treatmentForm">
+
+            <input
+                type="hidden"
+                id="treatmentId"
+                value="{{ treatment.id if treatment else '' }}"
+            >
+
+
+            <!-- APPOINTMENT INFORMATION -->
+
+            <div class="form-section">
+
+                <h2 class="section-title">
+                    Appointment Information
+                </h2>
+
+                <div class="form-grid">
+
+                    <!-- Appointment -->
+
+                    <div class="form-group full">
+
+                        <label for="appointment_id">
+                            Appointment
+                            <span class="required">*</span>
+                        </label>
+
+                        <select
+                            id="appointment_id"
+                            required
+                        >
+
+                            <option value="">
+                                -- Select Appointment --
+                            </option>
+
+                            {% for appointment in appointments %}
+
+                            <option
+                                value="{{ appointment.id }}"
+                                {% if treatment and treatment.appointment_id == appointment.id %}
+                                    selected
+                                {% endif %}
+                            >
+
+                                Appointment #{{ appointment.id }}
+                                -
+                                {{ appointment.patient.name }}
+                                -
+                                {{ appointment.doctor.name }}
+
+                            </option>
+
+                            {% endfor %}
+
+                        </select>
+
+                        <div class="field-help">
+                            Select the appointment associated with this treatment.
+                        </div>
+
+                    </div>
+
+
+                    <!-- Patient -->
+
+                    <div class="form-group">
+
+                        <label for="patient_id">
+                            Patient
+                            <span class="required">*</span>
+                        </label>
+
+                        <select
+                            id="patient_id"
+                            required
+                        >
+
+                            <option value="">
+                                -- Select Patient --
+                            </option>
+
+                            {% for patient in patients %}
+
+                            <option
+                                value="{{ patient.id }}"
+                                {% if treatment and treatment.patient_id == patient.id %}
+                                    selected
+                                {% endif %}
+                            >
+
+                                {{ patient.name }}
+
+                            </option>
+
+                            {% endfor %}
+
+                        </select>
+
+                    </div>
+
+
+                    <!-- Doctor -->
+
+                    <div class="form-group">
+
+                        <label for="doctor_id">
+                            Doctor
+                            <span class="required">*</span>
+                        </label>
+
+                        <select
+                            id="doctor_id"
+                            required
+                        >
+
+                            <option value="">
+                                -- Select Doctor --
+                            </option>
+
+                            {% for doctor in doctors %}
+
+                            <option
+                                value="{{ doctor.id }}"
+                                {% if treatment and treatment.doctor_id == doctor.id %}
+                                    selected
+                                {% endif %}
+                            >
+
+                                {{ doctor.name }}
+                                -
+                                {{ doctor.specialization }}
+
+                            </option>
+
+                            {% endfor %}
+
+                        </select>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- TREATMENT DETAILS -->
+
+            <div class="form-section">
+
+                <h2 class="section-title">
+                    Treatment Details
+                </h2>
+
+                <div class="form-grid">
+
+                    <!-- Treatment -->
+
+                    <div class="form-group full">
+
+                        <label for="treatment">
+                            Treatment
+                            <span class="required">*</span>
+                        </label>
+
+                        <input
+                            type="text"
+                            id="treatment"
+                            placeholder="Example: Migraine management"
+                            value="{{ treatment.treatment if treatment else '' }}"
+                            required
+                        >
+
+                    </div>
+
+
+                    <!-- Medicine -->
+
+                    <div class="form-group">
+
+                        <label for="medicine">
+                            Medicine
+                        </label>
+
+                        <input
+                            type="text"
+                            id="medicine"
+                            placeholder="Example: Paracetamol"
+                            value="{{ treatment.medicine if treatment and treatment.medicine else '' }}"
+                        >
+
+                    </div>
+
+
+                    <!-- Status -->
+
+                    <div class="form-group">
+
+                        <label for="status">
+                            Status
+                        </label>
+
+                        <select id="status">
+
+                            <option
+                                value="Ongoing"
+                                {% if treatment and treatment.status == "Ongoing" %}
+                                    selected
+                                {% endif %}
+                            >
+                                Ongoing
+                            </option>
+
+                            <option
+                                value="Completed"
+                                {% if treatment and treatment.status == "Completed" %}
+                                    selected
+                                {% endif %}
+                            >
+                                Completed
+                            </option>
+
+                            <option
+                                value="Cancelled"
+                                {% if treatment and treatment.status == "Cancelled" %}
+                                    selected
+                                {% endif %}
+                            >
+                                Cancelled
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                    <!-- Notes -->
+
+                    <div class="form-group full">
+
+                        <label for="notes">
+                            Notes
+                        </label>
+
+                        <textarea
+                            id="notes"
+                            placeholder="Enter treatment notes, observations or instructions"
+                        >{{ treatment.notes if treatment and treatment.notes else '' }}</textarea>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- ACTIONS -->
+
+            <div class="form-actions">
+
+                <a
+                    href="/treatments"
+                    class="btn btn-cancel"
+                >
+                    Cancel
+                </a>
+
+                <button
+                    type="submit"
+                    id="submitButton"
+                    class="btn btn-save"
+                >
+
+                    {% if treatment %}
+                        Update Treatment
+                    {% else %}
+                        Add Treatment
+                    {% endif %}
+
+                </button>
+
+            </div>
+
+        </form>
+
+
+        <!-- MESSAGE -->
+
+        <div
+            id="message"
+            class="message"
+        ></div>
+
+    </div>
+
+
+    <a
+        href="/treatments"
+        class="back-link"
+    >
+        ← Back to Treatment Records
+    </a>
+
+
+    <div class="footer-note">
+        CarePoint Hospital Management System • Treatment Management
+    </div>
+
+</div>
+
+
+<script>
+
+const treatmentForm =
+    document.getElementById(
+        "treatmentForm"
+    );
+
+const message =
+    document.getElementById(
+        "message"
+    );
+
+const submitButton =
+    document.getElementById(
+        "submitButton"
+    );
+
+
+// --------------------------------------------------
+// MESSAGE DISPLAY
+// --------------------------------------------------
+
+function showMessage(
+    text,
+    type
+) {
+
+    message.innerText =
+        text;
+
+    message.className =
+        "message " + type;
+
+}
+
+
+// --------------------------------------------------
+// FORM SUBMIT
+// --------------------------------------------------
+
+treatmentForm.addEventListener(
+    "submit",
+    async function(event) {
+
+        event.preventDefault();
+
+
+        const treatmentId =
+            document.getElementById(
+                "treatmentId"
+            ).value;
+
+
+        const appointmentId =
+            document.getElementById(
+                "appointment_id"
+            ).value;
+
+
+        const patientId =
+            document.getElementById(
+                "patient_id"
+            ).value;
+
+
+        const doctorId =
+            document.getElementById(
+                "doctor_id"
+            ).value;
+
+
+        const treatment =
+            document.getElementById(
+                "treatment"
+            ).value.trim();
+
+
+        const medicine =
+            document.getElementById(
+                "medicine"
+            ).value.trim();
+
+
+        const notes =
+            document.getElementById(
+                "notes"
+            ).value.trim();
+
+
+        const status =
+            document.getElementById(
+                "status"
+            ).value;
+
+
+        const token =
+            localStorage.getItem(
+                "access_token"
+            );
+
+
+        // --------------------------------------------------
+        // LOGIN CHECK
+        // --------------------------------------------------
+
+        if (!token) {
+
+            showMessage(
+                "Login required. Please login first.",
+                "error"
+            );
+
+            return;
+
+        }
+
+
+        // --------------------------------------------------
+        // VALIDATION
+        // --------------------------------------------------
+
+        if (!appointmentId) {
+
+            showMessage(
+                "Please select an appointment.",
+                "error"
+            );
+
+            return;
+
+        }
+
+
+        if (!patientId) {
+
+            showMessage(
+                "Please select a patient.",
+                "error"
+            );
+
+            return;
+
+        }
+
+
+        if (!doctorId) {
+
+            showMessage(
+                "Please select a doctor.",
+                "error"
+            );
+
+            return;
+
+        }
+
+
+        if (!treatment) {
+
+            showMessage(
+                "Please enter treatment.",
+                "error"
+            );
+
+            return;
+
+        }
+
+
+        // --------------------------------------------------
+        // DATA
+        // --------------------------------------------------
+
+        const treatmentData = {
+
+            appointment_id:
+                Number(appointmentId),
+
+            patient_id:
+                Number(patientId),
+
+            doctor_id:
+                Number(doctorId),
+
+            treatment:
+                treatment,
+
+            medicine:
+                medicine,
+
+            notes:
+                notes,
+
+            status:
+                status
+
+        };
+
+
+        let url;
+
+        let method;
+
+
+        // --------------------------------------------------
+        // ADD / EDIT
+        // --------------------------------------------------
+
+        if (treatmentId) {
+
+            url =
+                "/api/treatments/" +
+                treatmentId;
+
+            method =
+                "PUT";
+
+        }
+
+        else {
+
+            url =
+                "/api/treatments";
+
+            method =
+                "POST";
+
+        }
+
+
+        // --------------------------------------------------
+        // SEND REQUEST
+        // --------------------------------------------------
+
+        try {
+
+            submitButton.disabled =
+                true;
+
+
+            submitButton.innerText =
+                treatmentId
+                ? "Updating..."
+                : "Saving...";
+
+
+            const response =
+                await fetch(
+                    url,
+                    {
+                        method:
+                            method,
+
+                        headers: {
+
+                            "Content-Type":
+                                "application/json",
+
+                            "Authorization":
+                                "Bearer " +
+                                token
+
+                        },
+
+                        body:
+                            JSON.stringify(
+                                treatmentData
+                            )
+
+                    }
+                );
+
+
+            let result = {};
+
+            try {
+
+                result =
+                    await response.json();
+
+            }
+
+            catch (jsonError) {
+
+                result = {};
+
+            }
+
+
+            // --------------------------------------------------
+            // UNAUTHORIZED
+            // --------------------------------------------------
+
+            if (
+                response.status ===
+                401
+            ) {
+
+                localStorage.removeItem(
+                    "access_token"
+                );
+
+                localStorage.removeItem(
+                    "user"
+                );
+
+
+                showMessage(
+                    "Session expired. Please login again.",
+                    "error"
+                );
+
+
+                setTimeout(
+                    function() {
+
+                        window.location.href =
+                            "/login";
+
+                    },
+                    1000
+                );
+
+
+                return;
+
+            }
+
+
+            // --------------------------------------------------
+            // FORBIDDEN
+            // --------------------------------------------------
+
+            if (
+                response.status ===
+                403
+            ) {
+
+                showMessage(
+                    result.message ||
+                    "Doctor or Admin access required.",
+                    "error"
+                );
+
+
+                submitButton.disabled =
+                    false;
+
+
+                submitButton.innerText =
+                    treatmentId
+                    ? "Update Treatment"
+                    : "Add Treatment";
+
+
+                return;
+
+            }
+
+
+            // --------------------------------------------------
+            // OTHER ERRORS
+            // --------------------------------------------------
+
+            if (!response.ok) {
+
+                showMessage(
+                    result.message ||
+                    "Unable to save treatment.",
+                    "error"
+                );
+
+
+                submitButton.disabled =
+                    false;
+
+
+                submitButton.innerText =
+                    treatmentId
+                    ? "Update Treatment"
+                    : "Add Treatment";
+
+
+                return;
+
+            }
+
+
+            // --------------------------------------------------
+            // SUCCESS
+            // --------------------------------------------------
+
+            showMessage(
+                result.message ||
+                (
+                    treatmentId
+                    ? "Treatment updated successfully."
+                    : "Treatment added successfully."
+                ),
+                "success"
+            );
+
+
+            setTimeout(
+                function() {
+
+                    window.location.href =
+                        "/treatments";
+
+                },
+                1000
+            );
+
+        }
+
+
+        catch (error) {
+
+            console.error(error);
+
+
+            showMessage(
+                "Server error. Please try again.",
+                "error"
+            );
+
+
+            submitButton.disabled =
+                false;
+
+
+            submitButton.innerText =
+                treatmentId
+                ? "Update Treatment"
+                : "Add Treatment";
+
+        }
+
+    }
+);
+
+</script>
+
+</body>
+
+</html>

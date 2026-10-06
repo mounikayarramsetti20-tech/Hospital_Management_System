@@ -1,0 +1,824 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Appointment Details | CarePoint</title>
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='style.css') }}"
+    >
+
+    <style>
+
+        .appointment-view-page {
+            min-height: calc(100vh - 160px);
+            padding: 50px 20px;
+            background: #f8faf9;
+        }
+
+        .appointment-container {
+            max-width: 850px;
+            margin: 0 auto;
+        }
+
+        .page-heading {
+            margin-bottom: 25px;
+        }
+
+        .page-heading h1 {
+            margin: 0;
+            font-size: 32px;
+            color: #18332d;
+        }
+
+        .page-heading p {
+            margin-top: 8px;
+            color: #66756f;
+        }
+
+        .appointment-card {
+            background: #ffffff;
+            border: 1px solid #e2ebe7;
+            border-radius: 18px;
+            padding: 32px;
+            box-shadow: 0 12px 30px rgba(24, 51, 45, 0.08);
+        }
+
+        .appointment-header {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            padding-bottom: 24px;
+            margin-bottom: 10px;
+            border-bottom: 1px solid #e4ece9;
+        }
+
+        .appointment-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 15px;
+            background: #0f766e;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 26px;
+            font-weight: bold;
+        }
+
+        .appointment-header h2 {
+            margin: 0;
+            color: #18332d;
+            font-size: 23px;
+        }
+
+        .appointment-header p {
+            margin: 5px 0 0;
+            color: #71817b;
+            font-size: 14px;
+        }
+
+        .details-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 18px;
+            margin-top: 25px;
+        }
+
+        .detail-box {
+            background: #f8fbfa;
+            border: 1px solid #e4ece9;
+            border-radius: 12px;
+            padding: 18px;
+        }
+
+        .detail-label {
+            display: block;
+            margin-bottom: 8px;
+            color: #71817b;
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.6px;
+        }
+
+        .detail-value {
+            display: block;
+            color: #18332d;
+            font-size: 16px;
+            font-weight: 600;
+            word-break: break-word;
+        }
+
+        .status-box {
+            background: #edf8f5;
+            border-color: #c9e5df;
+        }
+
+        .status-value {
+            color: #12665f;
+        }
+
+        .loading {
+            background: white;
+            border: 1px solid #e2ebe7;
+            border-radius: 16px;
+            padding: 30px;
+            text-align: center;
+            color: #66756f;
+            box-shadow: 0 8px 25px rgba(24, 51, 45, 0.06);
+        }
+
+        .error {
+            display: none;
+            background: #fff4f1;
+            color: #9b3f2c;
+            border: 1px solid #f0c8bd;
+            border-radius: 12px;
+            padding: 18px;
+            margin-bottom: 20px;
+            white-space: pre-wrap;
+            font-weight: 600;
+        }
+
+        .buttons {
+            display: flex;
+            gap: 12px;
+            margin-top: 30px;
+            padding-top: 25px;
+            border-top: 1px solid #e4ece9;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 12px 20px;
+            border-radius: 10px;
+            text-decoration: none;
+            border: none;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 700;
+            transition: 0.2s ease;
+        }
+
+        .back {
+            background: #e8f2ef;
+            color: #12665f;
+        }
+
+        .back:hover {
+            background: #dcece8;
+        }
+
+        .edit {
+            background: #0f766e;
+            color: white;
+        }
+
+        .edit:hover {
+            background: #0b625b;
+            transform: translateY(-1px);
+        }
+
+        .logout {
+            background: #fff0ed;
+            color: #a33d2c;
+        }
+
+        .logout:hover {
+            background: #ffe2dc;
+        }
+
+        @media (max-width: 700px) {
+
+            .appointment-view-page {
+                padding: 30px 15px;
+            }
+
+            .appointment-card {
+                padding: 22px;
+            }
+
+            .details-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .page-heading h1 {
+                font-size: 27px;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<!-- NAVBAR -->
+
+<nav class="navbar">
+
+    <div class="nav-container">
+
+        <a href="/" class="brand">
+            CarePoint
+        </a>
+
+        <div class="nav-links">
+
+            <a href="/">Home</a>
+
+            <a href="/patients">Patients</a>
+
+            <a href="/doctors">Doctors</a>
+
+            <a href="/appointments">Appointments</a>
+
+            <a href="/treatments">Treatments</a>
+
+            <a href="/analytics">Analytics</a>
+
+            <a href="/data">Data</a>
+
+        </div>
+
+    </div>
+
+</nav>
+
+
+<!-- PAGE -->
+
+<main class="appointment-view-page">
+
+    <div class="appointment-container">
+
+
+        <div class="page-heading">
+
+            <h1>
+                Appointment Details
+            </h1>
+
+            <p>
+                View complete information about this hospital appointment.
+            </p>
+
+        </div>
+
+
+        <!-- LOADING -->
+
+        <div
+            id="loading"
+            class="loading"
+        >
+
+            Loading appointment...
+
+        </div>
+
+
+        <!-- ERROR -->
+
+        <div
+            id="error"
+            class="error"
+        ></div>
+
+
+        <!-- DETAILS -->
+
+        <div
+            id="details"
+            class="appointment-card"
+            style="display: none;"
+        >
+
+
+            <div class="appointment-header">
+
+                <div class="appointment-icon">
+                    A
+                </div>
+
+                <div>
+
+                    <h2>
+                        Appointment Information
+                    </h2>
+
+                    <p>
+                        Appointment and treatment scheduling details
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="details-grid">
+
+
+                <!-- APPOINTMENT ID -->
+
+                <div class="detail-box">
+
+                    <span class="detail-label">
+                        Appointment ID
+                    </span>
+
+                    <span
+                        id="appointmentId"
+                        class="detail-value"
+                    >
+                    </span>
+
+                </div>
+
+
+                <!-- PATIENT -->
+
+                <div class="detail-box">
+
+                    <span class="detail-label">
+                        Patient ID
+                    </span>
+
+                    <span
+                        id="patientId"
+                        class="detail-value"
+                    >
+                    </span>
+
+                </div>
+
+
+                <!-- DOCTOR -->
+
+                <div class="detail-box">
+
+                    <span class="detail-label">
+                        Doctor ID
+                    </span>
+
+                    <span
+                        id="doctorId"
+                        class="detail-value"
+                    >
+                    </span>
+
+                </div>
+
+
+                <!-- DATE -->
+
+                <div class="detail-box">
+
+                    <span class="detail-label">
+                        Appointment Date & Time
+                    </span>
+
+                    <span
+                        id="appointmentDate"
+                        class="detail-value"
+                    >
+                    </span>
+
+                </div>
+
+
+                <!-- DIAGNOSIS -->
+
+                <div class="detail-box">
+
+                    <span class="detail-label">
+                        Diagnosis
+                    </span>
+
+                    <span
+                        id="diagnosis"
+                        class="detail-value"
+                    >
+                    </span>
+
+                </div>
+
+
+                <!-- STATUS -->
+
+                <div class="detail-box status-box">
+
+                    <span class="detail-label">
+                        Appointment Status
+                    </span>
+
+                    <span
+                        id="status"
+                        class="detail-value status-value"
+                    >
+                    </span>
+
+                </div>
+
+
+            </div>
+
+
+            <!-- BUTTONS -->
+
+            <div class="buttons">
+
+                <a
+                    href="/appointments/"
+                    class="btn back"
+                >
+                    ← Back to Appointments
+                </a>
+
+
+                <a
+                    id="editButton"
+                    href="#"
+                    class="btn edit"
+                >
+                    Edit Appointment
+                </a>
+
+
+                <button
+                    type="button"
+                    onclick="logout()"
+                    class="btn logout"
+                >
+                    Logout
+                </button>
+
+            </div>
+
+
+        </div>
+
+
+    </div>
+
+</main>
+
+
+<!-- FOOTER -->
+
+<footer class="footer">
+
+    <p>
+        © 2026 CarePoint Hospital Management System
+    </p>
+
+</footer>
+
+
+<script>
+
+const token =
+    localStorage.getItem("access_token");
+
+
+const appointmentId =
+    Number("{{ appointment_id }}");
+
+
+/* Check login */
+
+if (!token) {
+
+    window.location.href =
+        "/login";
+
+}
+
+
+/* Show error */
+
+function showError(message) {
+
+    document.getElementById(
+        "loading"
+    ).style.display = "none";
+
+
+    const error =
+        document.getElementById("error");
+
+
+    error.textContent =
+        message;
+
+
+    error.style.display =
+        "block";
+
+}
+
+
+/* Load appointment */
+
+async function loadAppointment() {
+
+    if (!appointmentId) {
+
+        showError(
+            "Invalid appointment ID."
+        );
+
+        return;
+
+    }
+
+
+    try {
+
+        const response =
+            await fetch(
+                "/api/appointments/" +
+                appointmentId,
+                {
+                    method: "GET",
+
+                    headers: {
+
+                        "Authorization":
+                            "Bearer " + token,
+
+                        "Content-Type":
+                            "application/json"
+
+                    }
+
+                }
+            );
+
+
+        const responseText =
+            await response.text();
+
+
+        let data = null;
+
+
+        try {
+
+            data =
+                JSON.parse(
+                    responseText
+                );
+
+        }
+
+        catch (jsonError) {
+
+            showError(
+                "Server returned an invalid response.\n\n" +
+                responseText
+            );
+
+            return;
+
+        }
+
+
+        /* Session expired */
+
+        if (response.status === 401) {
+
+            localStorage.removeItem(
+                "access_token"
+            );
+
+            localStorage.removeItem(
+                "user"
+            );
+
+            window.location.href =
+                "/login";
+
+            return;
+
+        }
+
+
+        /* Access denied */
+
+        if (response.status === 403) {
+
+            showError(
+                "Access denied.\n\n" +
+                "You are not allowed to view this appointment."
+            );
+
+            return;
+
+        }
+
+
+        /* Not found */
+
+        if (response.status === 404) {
+
+            showError(
+                "Appointment not found."
+            );
+
+            return;
+
+        }
+
+
+        /* Other error */
+
+        if (!response.ok) {
+
+            showError(
+                "Unable to load appointment.\n\n" +
+                (
+                    data.message ||
+                    "Server error"
+                )
+            );
+
+            return;
+
+        }
+
+
+        if (!data.success) {
+
+            showError(
+                data.message ||
+                "Unable to load appointment."
+            );
+
+            return;
+
+        }
+
+
+        const appointment =
+            data.appointment;
+
+
+        /* Appointment ID */
+
+        document.getElementById(
+            "appointmentId"
+        ).textContent =
+            appointment.id;
+
+
+        /* Patient ID */
+
+        document.getElementById(
+            "patientId"
+        ).textContent =
+            appointment.patient_id;
+
+
+        /* Doctor ID */
+
+        document.getElementById(
+            "doctorId"
+        ).textContent =
+            appointment.doctor_id;
+
+
+        /* Format date */
+
+        let dateText =
+            appointment.date || "-";
+
+
+        if (appointment.date) {
+
+            const date =
+                new Date(
+                    appointment.date
+                );
+
+
+            if (
+                !isNaN(
+                    date.getTime()
+                )
+            ) {
+
+                dateText =
+                    date.toLocaleString();
+
+            }
+
+        }
+
+
+        document.getElementById(
+            "appointmentDate"
+        ).textContent =
+            dateText;
+
+
+        /* Diagnosis */
+
+        document.getElementById(
+            "diagnosis"
+        ).textContent =
+            appointment.diagnosis ||
+            "-";
+
+
+        /* Status */
+
+        document.getElementById(
+            "status"
+        ).textContent =
+            appointment.status ||
+            "-";
+
+
+        /* Edit link */
+
+        document.getElementById(
+            "editButton"
+        ).href =
+            "/appointments/" +
+            appointment.id +
+            "/edit";
+
+
+        /* Show details */
+
+        document.getElementById(
+            "loading"
+        ).style.display =
+            "none";
+
+
+        document.getElementById(
+            "details"
+        ).style.display =
+            "block";
+
+    }
+
+
+    catch (error) {
+
+        showError(
+            "Unable to connect to server.\n\n" +
+            error.message
+        );
+
+    }
+
+}
+
+
+/* Logout */
+
+function logout() {
+
+    localStorage.removeItem(
+        "access_token"
+    );
+
+    localStorage.removeItem(
+        "user"
+    );
+
+    window.location.href =
+        "/login";
+
+}
+
+
+/* Start page */
+
+loadAppointment();
+
+</script>
+
+
+</body>
+
+</html>

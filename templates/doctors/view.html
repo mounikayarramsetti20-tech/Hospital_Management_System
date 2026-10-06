@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Doctor Details | CarePoint</title>
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='style.css') }}"
+    >
+
+    <style>
+
+        .doctor-details-page {
+            padding: 50px 20px;
+            min-height: calc(100vh - 160px);
+            background: #f8faf9;
+        }
+
+        .doctor-details-container {
+            max-width: 850px;
+            margin: 0 auto;
+        }
+
+        .page-heading {
+            margin-bottom: 25px;
+        }
+
+        .page-heading h1 {
+            margin: 0;
+            font-size: 32px;
+            color: #18332d;
+        }
+
+        .page-heading p {
+            margin-top: 8px;
+            color: #66756f;
+        }
+
+        .doctor-card {
+            background: #ffffff;
+            border: 1px solid #e2ebe7;
+            border-radius: 18px;
+            padding: 32px;
+            box-shadow: 0 12px 30px rgba(24, 51, 45, 0.08);
+        }
+
+        .doctor-header {
+            display: flex;
+            align-items: center;
+            gap: 18px;
+            padding-bottom: 25px;
+            margin-bottom: 10px;
+            border-bottom: 1px solid #e4ece9;
+        }
+
+        .doctor-avatar {
+            width: 65px;
+            height: 65px;
+            border-radius: 16px;
+            background: #0f766e;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 27px;
+            font-weight: bold;
+        }
+
+        .doctor-header h2 {
+            margin: 0;
+            color: #18332d;
+            font-size: 24px;
+        }
+
+        .doctor-header p {
+            margin: 5px 0 0;
+            color: #6b7b75;
+        }
+
+        .details-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 18px;
+            margin-top: 25px;
+        }
+
+        .detail-box {
+            background: #f8fbfa;
+            border: 1px solid #e4ece9;
+            border-radius: 12px;
+            padding: 18px;
+        }
+
+        .detail-label {
+            display: block;
+            font-size: 13px;
+            font-weight: 700;
+            color: #71817b;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 7px;
+        }
+
+        .detail-value {
+            color: #18332d;
+            font-size: 16px;
+            font-weight: 600;
+            word-break: break-word;
+        }
+
+        .actions {
+            display: flex;
+            gap: 12px;
+            margin-top: 30px;
+            flex-wrap: wrap;
+        }
+
+        .action-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 12px 20px;
+            border-radius: 10px;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 14px;
+            transition: 0.2s ease;
+        }
+
+        .back-btn {
+            background: #e8f2ef;
+            color: #12665f;
+        }
+
+        .back-btn:hover {
+            background: #dcece8;
+        }
+
+        .edit-btn {
+            background: #0f766e;
+            color: white;
+        }
+
+        .edit-btn:hover {
+            background: #0b625b;
+            transform: translateY(-1px);
+        }
+
+        @media (max-width: 650px) {
+
+            .doctor-details-page {
+                padding: 30px 15px;
+            }
+
+            .doctor-card {
+                padding: 22px;
+            }
+
+            .details-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .doctor-header {
+                align-items: flex-start;
+            }
+
+            .page-heading h1 {
+                font-size: 27px;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<!-- NAVBAR -->
+
+<nav class="navbar">
+
+    <div class="nav-container">
+
+        <a href="/" class="brand">
+            CarePoint
+        </a>
+
+        <div class="nav-links">
+
+            <a href="/">Home</a>
+
+            <a href="/patients">Patients</a>
+
+            <a href="/doctors">Doctors</a>
+
+            <a href="/appointments">Appointments</a>
+
+            <a href="/treatments">Treatments</a>
+
+            <a href="/analytics">Analytics</a>
+
+            <a href="/data">Data</a>
+
+        </div>
+
+    </div>
+
+</nav>
+
+
+<!-- PAGE -->
+
+<main class="doctor-details-page">
+
+    <div class="doctor-details-container">
+
+
+        <div class="page-heading">
+
+            <h1>Doctor Details</h1>
+
+            <p>
+                View complete information about this doctor.
+            </p>
+
+        </div>
+
+
+        <div class="doctor-card">
+
+
+            <div class="doctor-header">
+
+                <div class="doctor-avatar">
+                    Dr
+                </div>
+
+                <div>
+
+                    <h2>
+                        {{ doctor.name }}
+                    </h2>
+
+                    <p>
+                        {{ doctor.specialization }}
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="details-grid">
+
+
+                <div class="detail-box">
+
+                    <span class="detail-label">
+                        Doctor ID
+                    </span>
+
+                    <span class="detail-value">
+                        {{ doctor.id }}
+                    </span>
+
+                </div>
+
+
+                <div class="detail-box">
+
+                    <span class="detail-label">
+                        Doctor Name
+                    </span>
+
+                    <span class="detail-value">
+                        {{ doctor.name }}
+                    </span>
+
+                </div>
+
+
+                <div class="detail-box">
+
+                    <span class="detail-label">
+                        Specialization
+                    </span>
+
+                    <span class="detail-value">
+                        {{ doctor.specialization }}
+                    </span>
+
+                </div>
+
+
+                <div class="detail-box">
+
+                    <span class="detail-label">
+                        Contact
+                    </span>
+
+                    <span class="detail-value">
+                        {{ doctor.contact }}
+                    </span>
+
+                </div>
+
+
+                <div class="detail-box">
+
+                    <span class="detail-label">
+                        Email
+                    </span>
+
+                    <span class="detail-value">
+                        {{ doctor.email }}
+                    </span>
+
+                </div>
+
+
+            </div>
+
+
+            <div class="actions">
+
+                <a
+                    href="/doctors"
+                    class="action-btn back-btn"
+                >
+                    ← Back to Doctors
+                </a>
+
+
+                <a
+                    href="/doctors/{{ doctor.id }}/edit"
+                    class="action-btn edit-btn"
+                >
+                    Edit Doctor
+                </a>
+
+            </div>
+
+
+        </div>
+
+
+    </div>
+
+</main>
+
+
+<!-- FOOTER -->
+
+<footer class="footer">
+
+    <p>
+        © 2026 CarePoint Hospital Management System
+    </p>
+
+</footer>
+
+
+</body>
+
+</html>
